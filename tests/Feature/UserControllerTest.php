@@ -5,6 +5,8 @@ namespace Tests\Feature;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Str;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 class UserControllerTest extends TestCase
@@ -19,6 +21,10 @@ class UserControllerTest extends TestCase
     public function testCreatingUsers()
     {
         $this->withoutExceptionHandling();
+
+        // Call to the class Storage to take a picture
+
+        $file = UploadedFile::fake()->image('profile.jpg');
         $user = [
             'name'=>'Josué Daniel',
             'last_name'=>'Merino Pineda',
@@ -26,6 +32,7 @@ class UserControllerTest extends TestCase
             'birth_date'=>$this->faker->date(),
             'password'=>password_hash('1234', PASSWORD_BCRYPT),
             'remember_token' => Str::random(10),
+            'image'=>$file,
 
         ];
 
@@ -42,6 +49,7 @@ class UserControllerTest extends TestCase
             'is_admin',
             'created_at',
         ]);
-        dump($response);
+
+        dump ( $response );
     }
 }

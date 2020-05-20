@@ -26,9 +26,14 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
+       //$data = $request->getContent();
+        //dd(json_decode($data));
         $user = User::create($request->all());
 
-        return response()->json(new UserResource($user), 201);
+        $user->image = $request->file('image')->store('imagenes','public');
+        $user->save();
+
+        return new UserResource($user);
     }
 
     /**
