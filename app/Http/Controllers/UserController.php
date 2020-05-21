@@ -40,7 +40,7 @@ class UserController extends Controller
 
         if ($request->image)
         {
-            $user->image = $request->file('image')->store('imagenes','public');
+            $user->image = $request->file('image')->store('usersProfileImages','public');
             $user->save();
         }
 
