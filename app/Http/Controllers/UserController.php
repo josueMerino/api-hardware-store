@@ -4,10 +4,18 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\UserResource;
 use App\User;
+use App\Http\Requests\UserRequest;
+use App\Http\Resources\UserResourceCollection;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
+    protected $user;
+    public function __construct(User $user)
+    {
+        $this->user = $user;
+    }
     /**
      * Display a listing of the resource.
      *
@@ -15,7 +23,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        //
+        return new UserResourceCollection($this->user->get());
     }
 
     /**
@@ -24,14 +32,18 @@ class UserController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(UserRequest $request)
     {
        //$data = $request->getContent();
         //dd(json_decode($data));
-        $user = User::create($request->all());
+        $user = $this->user->create( $request->all() );
 
-        $user->image = $request->file('image')->store('imagenes','public');
-        $user->save();
+        if ($request->image)
+        {
+            $user->image = $request->file('image')->store('imagenes','public');
+            $user->save();
+        }
+
 
         return new UserResource($user);
     }
@@ -44,7 +56,7 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        //
+        return new UserResource($user);
     }
 
     /**
@@ -54,9 +66,18 @@ class UserController extends Controller
      * @param  \App\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, User $user)
+    public function update(UserRequest $request, User $user)
     {
-        //
+        $user->update($request->all());
+
+        if ($request->image)
+        {
+            Storage::disk('public')->delete($user->image);
+            $user->image = $request->file('image')->store('imagenes','public');
+            $user->save();
+        }
+
+        return new UserResource($user);
     }
 
     /**
@@ -67,6 +88,8 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
-        //
+        $user->delete();
+
+        return response()->json('Eliminado con éxito', 204);
     }
 }
