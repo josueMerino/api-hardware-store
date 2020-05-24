@@ -38,4 +38,9 @@ class ProductControllerTest extends TestCase
             'image',
         ]);
     }
+
+    public function testShowOneProduct()
+    {
+
+    }
 }

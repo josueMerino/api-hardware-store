@@ -41,4 +41,9 @@ class User extends Authenticatable
     protected $attributes = [
         'is_admin' => false,
     ];
+
+    public function cartUserProduct()
+    {
+        return $this->hasOne(CartUserProduct::class);
+    }
 }
