@@ -4,10 +4,8 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class CartUserProduct extends Model
+class Purchase extends Model
 {
-
-    // Relantionships, attributes and mutators
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -16,5 +14,10 @@ class CartUserProduct extends Model
     public function products()
     {
         return $this->belongsToMany(Product::class)->withTimestamps();
+    }
+
+    public function card()
+    {
+        return $this->belongsTo(Card::class);
     }
 }
