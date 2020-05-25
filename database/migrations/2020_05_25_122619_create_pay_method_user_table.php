@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePurchasesTable extends Migration
+class CreatePayMethodUserTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,13 @@ class CreatePurchasesTable extends Migration
      */
     public function up()
     {
-        Schema::create('purchases', function (Blueprint $table) {
+        Schema::create('pay_method_user', function (Blueprint $table) {
             $table->id();
+
             $table->foreignId('user_id')->constrained();
-            $table->foreignId('card_id')->nullable()->constrained();
+            $table->foreignId('pay_method_id')->constrained();
+            $table->boolean('is_favorite_method')->nullable();
+
             $table->timestamps();
         });
     }
@@ -28,6 +31,6 @@ class CreatePurchasesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('purchases');
+        Schema::dropIfExists('pay_method_user');
     }
 }

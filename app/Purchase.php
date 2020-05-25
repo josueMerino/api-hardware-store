@@ -20,4 +20,9 @@ class Purchase extends Model
     {
         return $this->belongsTo(Card::class);
     }
+
+    public function payMethod()
+    {
+        return $this->belongsTo(PayMethod::class);
+    }
 }
