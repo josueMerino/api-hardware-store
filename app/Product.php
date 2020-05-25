@@ -8,4 +8,16 @@ class Product extends Model
 {
     protected $fillable =
     ['name', 'price', 'information',];
+
+
+    // Relantionships, attributes and mutators
+    public function cartUserProducts()
+    {
+        return $this->belongsToMany(CartUserProduct::class);
+    }
+
+    public function wishlists()
+    {
+        return $this->belongsToMany(Wishlist::class);
+    }
 }

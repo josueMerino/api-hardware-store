@@ -42,8 +42,14 @@ class User extends Authenticatable
         'is_admin' => false,
     ];
 
+    // Relantionships, attributes and mutators
     public function cartUserProduct()
     {
         return $this->hasOne(CartUserProduct::class);
+    }
+
+    public function wishlist()
+    {
+        return $this->hasOne(Wishlist::class);
     }
 }

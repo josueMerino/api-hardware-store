@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateCartUserProductsTable extends Migration
+class CreateProductWishlistTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,12 @@ class CreateCartUserProductsTable extends Migration
      */
     public function up()
     {
-        Schema::create('cart_user_products', function (Blueprint $table) {
+        Schema::create('product_wishlist', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained();
-            $table->unsignedInteger('number_of_items');
+
+            $table->foreignId('wishlist_id')->constrained();
+            $table->foreignId('product_id')->constrained();
+
             $table->timestamps();
         });
     }
@@ -28,6 +30,6 @@ class CreateCartUserProductsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('cart_user_products');
+        Schema::dropIfExists('product_wishlist');
     }
 }

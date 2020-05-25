@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class CartUserProduct extends Model
+class Wishlist extends Model
 {
 
     // Relantionships, attributes and mutators
@@ -17,4 +17,5 @@ class CartUserProduct extends Model
     {
         return $this->belongsToMany(Product::class);
     }
+
 }
