@@ -14,6 +14,14 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::apiResource('users', 'UserController');
+Route::post('/login', 'AuthController@login');
 
-Route::apiResource('products', 'ProductController');
+Route::post('/register', 'RegisterController@register');
+
+Route::middleware(['auth:sanctum'])->group(function () {
+
+    Route::apiResource('users', 'UserController')->except('store');
+
+    Route::apiResource('products', 'ProductController');
+
+});
