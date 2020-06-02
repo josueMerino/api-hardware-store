@@ -2,11 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\User;
 use App\Wishlist;
 use Illuminate\Http\Request;
 
 class WishlistController extends Controller
 {
+    protected $wishlist;
+
+    public function __construct(Wishlist $wishlist)
+    {
+        $this->wishlist = $wishlist;
+    }
     /**
      * Display a listing of the resource.
      *
@@ -25,7 +32,11 @@ class WishlistController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $user = Wishlist::find($request->user_id)->user();
+
+        $wishlist = $this->wishlist->create( $request->all() );
+
+        return response()->json($wishlist, 201);
     }
 
     /**

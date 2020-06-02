@@ -7,6 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 class Wishlist extends Model
 {
 
+    // Mass Asignments
+    protected $fillable = [
+        'user_id', 'number_of_items'
+    ];
+
     // Relantionships, attributes and mutators
     public function user()
     {
@@ -18,4 +23,7 @@ class Wishlist extends Model
         return $this->belongsToMany(Product::class)->withTimestamps();
     }
 
+    protected $attributes = [
+        'number_of_items' => 1,
+    ];
 }

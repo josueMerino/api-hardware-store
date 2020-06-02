@@ -57,4 +57,9 @@ class LoginTest extends TestCase
         $response->assertStatus(400) //Bad Request
         ->assertJsonStructure(['message', 'error']);
     }
+
+    public function logout()
+    {
+
+    }
 }

@@ -24,4 +24,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::apiResource('products', 'ProductController');
 
+    Route::apiResource('wishlists', 'WishlistController');
+
 });
