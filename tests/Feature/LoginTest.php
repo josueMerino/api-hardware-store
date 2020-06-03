@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Laravel\Sanctum\Sanctum;
 use Tests\TestCase;
 
 class LoginTest extends TestCase
@@ -18,7 +19,7 @@ class LoginTest extends TestCase
     use WithFaker;
     public function testLogin()
     {
-        $this->withoutExceptionHandling();
+        //$this->withoutExceptionHandling();
         //The user is logging
         factory(User::class)->create([
             'email' => 'test@tester.com',
@@ -58,8 +59,18 @@ class LoginTest extends TestCase
         ->assertJsonStructure(['message', 'error']);
     }
 
-    public function logout()
+    public function testLogout()
     {
+        //We login the user
+        $this->withoutExceptionHandling();
 
+        $user = factory(User::class)->create()->toArray();
+
+        $auth = factory(User::class)->create();
+
+        $response = $this->actingAs($auth)->json('POST', 'api/logout', $user);
+
+        $response->assertStatus(200);
     }
+
 }

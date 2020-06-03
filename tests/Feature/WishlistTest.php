@@ -25,12 +25,14 @@ class WishlistTest extends TestCase
 
         $user = factory(User::class)->create();
 
-        $product = factory(Product::class)->create()->toArray();
+        factory(Product::class)->create()->toArray();
         $wishlist = factory(Wishlist::class)->create()->toArray();
 
-        Sanctum::actingAs($user, ['*']);
-        $response = $this->json('POST', 'api/wishlists', $wishlist);
+
+        $response = $this->actingAs($user)->json('POST', 'api/wishlists', $wishlist);
 
         $response->assertStatus(201);
+
+        dd($response->getContent());
     }
 }

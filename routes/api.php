@@ -18,12 +18,14 @@ Route::post('/login', 'AuthController@login');
 
 Route::post('/register', 'RegisterController@register');
 
-Route::middleware(['auth:sanctum'])->group(function () {
+Route::middleware(['api'])->group(function () {
 
     Route::apiResource('users', 'UserController')->except('store');
 
     Route::apiResource('products', 'ProductController');
 
     Route::apiResource('wishlists', 'WishlistController');
+
+    Route::post('/logout', 'AuthController@logout');
 
 });

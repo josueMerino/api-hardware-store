@@ -32,9 +32,14 @@ class WishlistController extends Controller
      */
     public function store(Request $request)
     {
-        $user = Wishlist::find($request->user_id)->user();
+        $auth = auth()->user()->id;
 
-        $wishlist = $this->wishlist->create( $request->all() );
+
+        $wishlist = $this->wishlist->create( [
+            'id'=>$request->id,
+            'user_id' => $auth,
+            'number_of_items'=>$request->number_of_items,
+        ]);
 
         return response()->json($wishlist, 201);
     }
