@@ -14,9 +14,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::post('/login', 'AuthController@login');
+Route::post('login', 'AuthController@login');
 
-Route::post('/register', 'RegisterController@register');
+Route::post('register', 'RegisterController@register');
 
 Route::middleware(['api'])->group(function () {
 
@@ -26,6 +26,10 @@ Route::middleware(['api'])->group(function () {
 
     Route::apiResource('wishlists', 'WishlistController');
 
-    Route::post('/logout', 'AuthController@logout');
+    Route::apiResource('cards', 'CardController');
+
+    Route::apiResource('addresses', 'AddressController');
+
+    Route::post('logout', 'AuthController@logout');
 
 });

@@ -3,10 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Card;
+use App\Http\Requests\CardRequest;
 use Illuminate\Http\Request;
 
 class CardController extends Controller
 {
+    protected $card;
+
+    public function __construct(Card $card)
+    {
+        $this->card = $card;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -23,9 +31,15 @@ class CardController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CardRequest $request)
     {
-        //
+
+
+        $auth = auth()->user()->id;
+
+        $data = $this->card->create( ['user_id' => $auth,] + $request->all() );
+
+        return response()->json($data, 201);
     }
 
     /**
@@ -59,6 +73,8 @@ class CardController extends Controller
      */
     public function destroy(Card $card)
     {
-        //
+        $card->delete();
+
+        return response()->json(null, 204);
     }
 }

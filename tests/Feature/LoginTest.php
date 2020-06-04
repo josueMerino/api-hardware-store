@@ -19,17 +19,18 @@ class LoginTest extends TestCase
     use WithFaker;
     public function testLogin()
     {
-        //$this->withoutExceptionHandling();
+        $this->withoutExceptionHandling();
         //The user is logging
         factory(User::class)->create([
             'email' => 'test@tester.com',
             'password' => bcrypt('1234'),
-        ])->toArray();
+        ]);
 
-        $response = $this->json('POST', '/api/login', [
+        $response = $this->json('POST', 'api/login', [
             'email' => 'test@tester.com',
             'password' => '1234',
         ]);
+
 
         $response->assertOk()
         ->assertJsonStructure(['access_token']);

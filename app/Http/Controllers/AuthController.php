@@ -12,7 +12,7 @@ class AuthController extends Controller
 {
 
     public function login(Request $request){
-
+    dd($request);
     try {
         $request->validate([
             'email' => 'email|required',
@@ -21,7 +21,6 @@ class AuthController extends Controller
         $credentials = request(['email', 'password']);
         if (!Auth::attempt($credentials))
         {
-
             // When validation is fulfilled but is wrong the message is shown
             return response()->json([
             'message' => 'Wrong Email or/and Password, try again'
@@ -31,11 +30,11 @@ class AuthController extends Controller
         if ( !Hash::check($request->password, $user->password, [])) {
         throw new \Exception('Error in Login');
         }
-        $tokenResult = $user->createToken('authToken')->plainTextToken;
+        $tokenResult = $user->createToken('token')->plainTextToken;
 
         return response()->json([
         'access_token' => $tokenResult,
-        ]);
+        ], 200);
     }
     catch (Exception $error)
     {
@@ -47,7 +46,7 @@ class AuthController extends Controller
 
     }
 
-    public function logout(User $user)
+    public function logout()
     {
         if (Auth::check()) {
             Auth::logout();

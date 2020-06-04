@@ -9,6 +9,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Laravel\Sanctum\Sanctum;
 use Tests\TestCase;
+use Tests\Feature\ProductControllerTest;
 
 class WishlistTest extends TestCase
 {
@@ -25,9 +26,8 @@ class WishlistTest extends TestCase
 
         $user = factory(User::class)->create();
 
-        factory(Product::class)->create()->toArray();
+        (ProductControllerTest::testCreatingProducts());
         $wishlist = factory(Wishlist::class)->create()->toArray();
-
 
         $response = $this->actingAs($user)->json('POST', 'api/wishlists', $wishlist);
 

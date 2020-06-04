@@ -62,7 +62,7 @@ class RegisterTest extends TestCase
             'last_name'=>'a',
             'email'=>'testertest.com',
             'birth_date'=>'r',
-            'password'=>password_hash('3560', PASSWORD_BCRYPT),
+            'password'=>'3560',
             'image'=>$file,
 
         ];

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\WishlistResource;
 use App\User;
 use App\Wishlist;
 use Illuminate\Http\Request;
@@ -41,7 +42,7 @@ class WishlistController extends Controller
             'number_of_items'=>$request->number_of_items,
         ]);
 
-        return response()->json($wishlist, 201);
+        return response()->json(new WishlistResource($wishlist), 201);
     }
 
     /**
