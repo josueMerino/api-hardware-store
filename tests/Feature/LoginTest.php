@@ -69,6 +69,8 @@ class LoginTest extends TestCase
 
         $auth = factory(User::class)->create();
 
+        //Sanctum::actingAs($auth, ['*']);
+
         $response = $this->actingAs($auth)->json('POST', 'api/logout', $user);
 
         $response->assertStatus(200);

@@ -18,7 +18,7 @@ Route::post('login', 'AuthController@login');
 
 Route::post('register', 'RegisterController@register');
 
-Route::middleware(['api'])->group(function () {
+Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::apiResource('users', 'UserController')->except('store');
 

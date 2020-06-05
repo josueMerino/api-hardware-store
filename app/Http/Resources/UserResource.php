@@ -22,7 +22,7 @@ class UserResource extends JsonResource
             'birth_date'=>$this->birth_date,
             'image'=>$this->image,
             'is_admin'=>$this->is_admin,
-            'created_at'=>$this->created_at->format('Y-m-d H:i'),
+            'created_at'=>$this->created_at,
         ];
     }
 }

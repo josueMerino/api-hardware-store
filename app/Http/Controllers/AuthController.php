@@ -12,7 +12,7 @@ class AuthController extends Controller
 {
 
     public function login(Request $request){
-    dd($request);
+
     try {
         $request->validate([
             'email' => 'email|required',
@@ -30,7 +30,7 @@ class AuthController extends Controller
         if ( !Hash::check($request->password, $user->password, [])) {
         throw new \Exception('Error in Login');
         }
-        $tokenResult = $user->createToken('token')->plainTextToken;
+        $tokenResult = $user->createToken('token', ['server:update'])->plainTextToken;
 
         return response()->json([
         'access_token' => $tokenResult,

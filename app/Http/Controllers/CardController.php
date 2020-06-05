@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Card;
 use App\Http\Requests\CardRequest;
+use App\Http\Resources\CardResource;
 use Illuminate\Http\Request;
 
 class CardController extends Controller
@@ -34,12 +35,15 @@ class CardController extends Controller
     public function store(CardRequest $request)
     {
 
-
         $auth = auth()->user()->id;
 
-        $data = $this->card->create( ['user_id' => $auth,] + $request->all() );
+        $data = $this->card->create( [
+            'id' => $request->id,
+            'user_id' => $auth,
+            'card_number' => $request->card_number,
+            ] );
 
-        return response()->json($data, 201);
+        return response()->json(new CardResource($data), 201);
     }
 
     /**
@@ -50,7 +54,7 @@ class CardController extends Controller
      */
     public function show(Card $card)
     {
-        //
+        return new CardResource($card);
     }
 
     /**
