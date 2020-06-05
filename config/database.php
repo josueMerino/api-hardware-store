@@ -46,10 +46,10 @@ return [
         'mysql' => [
             'driver' => 'mysql',
             'url' => env('DATABASE_URL'),
-            'host' => env('DB_HOST', '127.0.0.1', 'db4free.net'),
+            'host' => env('DB_HOST', 'db4free.net'),
             'port' => env('DB_PORT', '3306'),
-            'database' => env('DB_DATABASE', 'forge', 'hardware_store'),
-            'username' => env('DB_USERNAME', 'forge', 'raptor'),
+            'database' => env('DB_DATABASE', 'hardware_store'),
+            'username' => env('DB_USERNAME', 'raptor'),
             'password' => env('DB_PASSWORD', 'o5gfdFwc'),
             'unix_socket' => env('DB_SOCKET', ''),
             'charset' => 'utf8mb4',
