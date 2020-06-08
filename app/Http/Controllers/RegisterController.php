@@ -9,6 +9,8 @@ use Laravel\Sanctum\Sanctum;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator as FacadesValidator;
+
 
 class RegisterController extends Controller
 {
@@ -19,8 +21,22 @@ class RegisterController extends Controller
         $this->register = $user;
     }
 
-    public function register(UserRequest $request)
+    public function register(Request $request)
     {
+
+        $validator = FacadesValidator::make($request->all(), [
+            'name' => 'required',
+            'last_name' => 'required|string',
+            'email' => 'required|email',
+            'birth_date' => 'required',
+            'country' => 'required',
+            'password' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors'=>$validator->errors()],422);
+        }
+
         //Create user, generate token and return
         $register = $this->register->create( $request->all() );
 
