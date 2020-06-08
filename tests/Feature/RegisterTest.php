@@ -30,6 +30,7 @@ class RegisterTest extends TestCase
             'last_name'=>'Merino Pineda',
             'email'=>'tester@test.com',
             'birth_date'=>$this->faker->date('d-m-Y'),
+            'country' => $this->faker->country,
             'password'=>password_hash('1234', PASSWORD_BCRYPT),
             'image'=>$file,
 
@@ -44,6 +45,7 @@ class RegisterTest extends TestCase
             'last_name',
             'email',
             'birth_date',
+            'country',
             'image',
             'is_admin',
             'created_at',

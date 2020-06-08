@@ -26,8 +26,9 @@ class WishlistTest extends TestCase
 
         $user = factory(User::class)->create();
 
-        (ProductControllerTest::testCreatingProducts());
-        $wishlist = factory(Wishlist::class)->create()->toArray();
+        $wishlist = [
+            'number_of_items' => 12,
+        ];
 
         $response = $this->actingAs($user)->json('POST', 'api/wishlists', $wishlist);
 
