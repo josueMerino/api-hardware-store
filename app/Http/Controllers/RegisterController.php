@@ -24,31 +24,41 @@ class RegisterController extends Controller
     public function register(Request $request)
     {
 
-        $validator = FacadesValidator::make($request->all(), [
-            'name' => 'required',
-            'last_name' => 'required|string',
-            'email' => 'required|email',
-            'birth_date' => 'required',
-            'country' => 'required',
-            'password' => 'required',
-        ]);
+        try {
+            $validator = FacadesValidator::make($request->all(), [
+                'name' => 'required',
+                'last_name' => 'required|string',
+                'email' => 'required|email',
+                'birth_date' => 'required',
+                'country' => 'required',
+                'password' => 'required',
+            ]);
 
-        if ($validator->fails()) {
-            return response()->json(['errors'=>$validator->errors()],422);
-        }
+            if ($validator->fails()) {
+                return response()->json(['errors'=>$validator->errors()],422);
+            }
 
-        //Create user, generate token and return
-        $register = $this->register->create( $request->all() );
 
-        //dd($request);
+            //Create user, generate token and return
+            $register = $this->register->create( $request->all() );
 
-        if ($request->image)
+            //dd($request);
+
+            if ($request->image)
+            {
+                $register->image = $request->file('image')->store('usersProfileImages','public');
+                $register->save();
+            }
+
+            return new UserResource($register);
+        } catch (Exception $error)
         {
-            $register->image = $request->file('image')->store('usersProfileImages','public');
-            $register->save();
+            return response()->json([
+            'message' => 'Error in Register',
+            'error' => $error,
+            ], 500);
         }
 
-        return new UserResource($register);
 
 
     }
