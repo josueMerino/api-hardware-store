@@ -28,6 +28,7 @@ class UserRequest extends FormRequest
             'last_name' => 'required|string',
             'email' => 'required|email',
             'birth_date' => 'required',
+            'country' => 'required',
             'password' => 'required',
 
 

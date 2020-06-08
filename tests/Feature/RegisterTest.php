@@ -36,7 +36,7 @@ class RegisterTest extends TestCase
 
         ];
 
-        $response = $this->json('POST','/api/register', $user);
+        $response = $this->json('POST','api/register', $user);
 
         $response->assertStatus(201)
         ->assertJsonStructure([

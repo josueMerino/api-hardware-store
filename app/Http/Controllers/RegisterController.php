@@ -22,14 +22,9 @@ class RegisterController extends Controller
     public function register(UserRequest $request)
     {
         //Create user, generate token and return
-        $register = $this->register->create( [
-            'name' => $request->name,
-            'last_name' => $request->last_name,
-            'email' => $request->email,
-            'birth_date' => $request->birth_date,
-            'password' => Hash::make($request->password),
-            'is_admin' => $request->is_admin,
-        ] );
+        $register = $this->register->create( $request->all() );
+
+        //dd($request);
 
         if ($request->image)
         {
