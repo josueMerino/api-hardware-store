@@ -196,4 +196,6 @@ return [
 
     'same_site' => 'lax',
 
+    'domain' => '.herokuapp.com',
+
 ];
