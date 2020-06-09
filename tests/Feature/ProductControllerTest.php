@@ -16,13 +16,13 @@ class ProductControllerTest extends TestCase
      *
      * @return void
      */
-    public function testCreatingProducts()
+    public function testCreateProduct()
     {
         $this->withoutExceptionHandling();
-        $image = UploadedFile::fake()->image('product');
+        $image = UploadedFile::fake()->image('product.jpg');
         $producto = [
             'title' =>$this->faker->name,
-            'price' =>$this->faker->randomFloat(),
+            'price' =>$this->faker->randomFloat(2,4),
             'information' => $this->faker->paragraph(),
             'image' =>$image,
         ];
@@ -36,7 +36,11 @@ class ProductControllerTest extends TestCase
             'price',
             'information',
             'image',
-        ]);
+        ])
+        ->dump();
+
+        dd($response->getContent());
+
     }
 
     public function testShowOneProduct()

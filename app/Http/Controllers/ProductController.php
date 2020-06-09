@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ProductRequest;
 use App\Http\Resources\ProductoResourceCollection;
 use App\Http\Resources\ProductResource;
 use App\Http\Resources\UserResource;
@@ -33,13 +34,13 @@ class ProductController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(ProductRequest $request)
     {
         $product = $this->product->create($request->all());
 
-        if ($product->image)
+        if ($request->image)
         {
-            $product->image = $request->file('image')->store('productosImages', 'public');
+            $product->image = $request->file('image')->store('productsImages', 'public');
             $product->save();
         }
 
