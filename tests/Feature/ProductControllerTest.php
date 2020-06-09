@@ -21,7 +21,7 @@ class ProductControllerTest extends TestCase
         $this->withoutExceptionHandling();
         $image = UploadedFile::fake()->image('product');
         $producto = [
-            'name' =>$this->faker->name,
+            'title' =>$this->faker->name,
             'price' =>$this->faker->randomFloat(),
             'information' => $this->faker->paragraph(),
             'image' =>$image,
@@ -32,7 +32,7 @@ class ProductControllerTest extends TestCase
         $response->assertStatus(201)
         ->assertJsonStructure([
             'id',
-            'name',
+            'title',
             'price',
             'information',
             'image',
