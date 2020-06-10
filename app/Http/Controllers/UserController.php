@@ -32,7 +32,7 @@ class UserController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(UserRequest $request)
+    /*public function store(UserRequest $request)
     {
        //$data = $request->getContent();
         //dd(json_decode($data));
@@ -46,7 +46,7 @@ class UserController extends Controller
 
 
         return new UserResource($user);
-    }
+    }*/
 
     /**
      * Display the specified resource.
@@ -56,6 +56,7 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
+        //dump($user);
         return new UserResource($user);
     }
 

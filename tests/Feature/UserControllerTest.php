@@ -28,7 +28,10 @@ class UserControllerTest extends TestCase
 
         $response = $this->json('GET', "/api/users/$user->id");
 
-        $response->assertStatus(200);
+        $response->assertStatus(200)
+        ->dump();
+
+        dd($response);
     }
 
     public function testUpdateOneUser()
@@ -94,4 +97,6 @@ class UserControllerTest extends TestCase
             ]
         ]);
     }
+
+
 }

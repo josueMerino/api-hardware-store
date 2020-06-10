@@ -28,8 +28,9 @@ $factory->define(User::class, function (Faker $faker) {
         'email' => 'test@tester.com',
         'email_verified_at' => now(),
         'password' => bcrypt('1234'), // password
-        'remember_token' => Str::random(10),
+        //'remember_token' => Str::random(10),
         'birth_date' =>$faker->date(),
+        'country' =>$faker->country,
         'image'=>$file,
 
 

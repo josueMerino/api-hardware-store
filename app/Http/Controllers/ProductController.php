@@ -101,7 +101,7 @@ class ProductController extends Controller
             $product->save();
         }
 
-        return new UserResource($product);
+        return new ProductResource($product);
     }
 
     /**
