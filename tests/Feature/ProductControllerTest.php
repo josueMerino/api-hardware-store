@@ -18,7 +18,7 @@ class ProductControllerTest extends TestCase
      */
     public function testCreateProduct()
     {
-        $this->withoutExceptionHandling();
+        //$this->withoutExceptionHandling();
         $image = UploadedFile::fake()->image('product.jpg');
         $producto = [
             'title' =>$this->faker->name,
@@ -43,8 +43,21 @@ class ProductControllerTest extends TestCase
 
     }
 
-    public function testShowOneProduct()
+    public function testErrorCreateProduct()
     {
+        //$this->withoutExceptionHandling();
+        $image = UploadedFile::fake()->image('product.jpg');
+        $producto = [
+            'title' => '',
+            'price' =>'',
+            'information' => '',
+            'image' =>$image,
+        ];
+
+        $response = $this->json('POST', 'api/products', $producto);
+
+        $response->assertStatus(400)
+        ->dump();
 
     }
 }

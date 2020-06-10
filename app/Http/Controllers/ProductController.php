@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ProductRequest;
 use App\Http\Resources\ProductoResourceCollection;
 use App\Http\Resources\ProductResource;
 use App\Http\Resources\UserResource;
 use App\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 
 class ProductController extends Controller
 {
@@ -17,6 +17,20 @@ class ProductController extends Controller
     public function __construct(Product $product)
     {
         $this->product = $product;
+
+    }
+
+    /**
+     * This function declares the rules that our data must have
+     */
+    public function rules()
+    {
+        return [
+            'title' => 'required|max:120',
+            'price' => 'required|numeric',
+            'information' => 'required|max:255',
+            'image' => 'nullable|image',
+        ];
     }
     /**
      * Display a listing of the resource.
@@ -34,17 +48,26 @@ class ProductController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(ProductRequest $request)
+    public function store(Request $request)
     {
-        $product = $this->product->create($request->all());
+        $validator = Validator::make($request->all(), $this->rules());
 
+        if ($validator->fails())
+        {
+            return response()->json([
+                'message' => 'The given data is invalid',
+                'errors'=>$validator->errors()
+            ],400);
+        }
+        $product = $this->product->create($request->all());
         if ($request->image)
         {
             $product->image = $request->file('image')->store('productsImages', 'public');
             $product->save();
         }
 
-        return new ProductResource($product);
+        return (new ProductResource($product))
+        ->response();
     }
 
     /**
