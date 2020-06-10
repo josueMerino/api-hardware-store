@@ -6,6 +6,7 @@ use App\Http\Resources\ProductoResourceCollection;
 use App\Http\Resources\ProductResource;
 use App\Http\Resources\UserResource;
 use App\Product;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -29,7 +30,7 @@ class ProductController extends Controller
             'title' => 'required|max:120',
             'price' => 'required|numeric',
             'information' => 'required|max:255',
-            //'image' => 'nullable|image',
+            'image' => 'nullable|image',
         ];
     }
     /**
@@ -50,24 +51,25 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(), $this->rules());
+            $validator = Validator::make($request->all(), $this->rules());
 
-        if ($validator->fails())
-        {
-            return response()->json([
-                'message' => 'The given data is invalid',
-                'errors'=>$validator->errors()
-            ],400);
-        }
-        $product = $this->product->create($request->all());
-        if ($request->image)
-        {
-            $product->image = $request->file('image')->store('productsImages', 'public');
-            $product->save();
-        }
+            if ($validator->fails())
+            {
+                return response()->json([
+                    'message' => 'The given data is invalid',
+                    'errors'=>$validator->errors()
+                ],400);
+            }
+            $product = $this->product->create($request->all());
+            if ($request->file('image') && $request->image)
+            {
+                $product->image = $request->file('image')->store('productsImages', 'public');
+                $product->save();
+            }
 
-        return (new ProductResource($product))
-        ->response();
+            return (new ProductResource($product));
+
+
     }
 
     /**

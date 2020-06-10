@@ -18,7 +18,7 @@ class ProductControllerTest extends TestCase
      */
     public function testCreateProduct()
     {
-        //$this->withoutExceptionHandling();
+        $this->withoutExceptionHandling();
         $image = UploadedFile::fake()->image('product.jpg');
         $producto = [
             'title' =>$this->faker->name,
