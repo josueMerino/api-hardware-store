@@ -29,7 +29,7 @@ class ProductController extends Controller
             'title' => 'required|max:120',
             'price' => 'required|numeric',
             'information' => 'required|max:255',
-            'image' => 'nullable|image',
+            //'image' => 'nullable|image',
         ];
     }
     /**
