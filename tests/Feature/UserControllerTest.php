@@ -52,7 +52,7 @@ class UserControllerTest extends TestCase
 
         ]);
 
-        dump($user, $response);
+        //dump($user, $response);
 
         $response
         ->assertStatus(200)

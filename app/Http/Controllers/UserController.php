@@ -68,8 +68,7 @@ class UserController extends Controller
     public function update(Request $request, User $user)
     {
 
-        //dd($request);
-
+        //dump($request);
         $validator = Validator::make($request->all(), $this->rules());
 
         if($validator->fails()){

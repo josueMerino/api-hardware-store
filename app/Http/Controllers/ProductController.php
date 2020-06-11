@@ -92,14 +92,31 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $product)
     {
+
+        $validator = Validator::make($request->all(), [
+            'title' => 'max:120',
+            'image' => 'image|nullable',
+            'price' => 'numeric',
+            'information' => 'max:255',
+        ]);
+
+        if ($validator->fails())
+        {
+            return response()->json([
+                'message' => 'The given data is invalid',
+                'errors'=>$validator->errors()
+            ],422);
+        }
+
         $product->update($request->all());
 
-        if ($product->image)
+        if ($request->file('image') && $request->image)
         {
             Storage::disk('public')->delete($product->image);
-            $product->image = $request->file('image')->store('productosImages', 'public');
+            $product->image = $request->file('image')->store('productsImages', 'public');
             $product->save();
         }
+
 
         return new ProductResource($product);
     }
@@ -114,6 +131,7 @@ class ProductController extends Controller
     {
         $product->delete();
 
-        return response()->json('Eliminado con éxito', 204);
+        return response()->json([
+            'message' => 'Eliminado con éxito'], 200);
     }
 }
