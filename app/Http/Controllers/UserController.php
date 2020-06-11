@@ -101,6 +101,8 @@ class UserController extends Controller
     {
         $user->delete();
 
-        return response()->json('Eliminado con éxito', 204);
+        return response()->json([
+            'message' =>'Eliminado con éxito'
+            ], 200);
     }
 }
