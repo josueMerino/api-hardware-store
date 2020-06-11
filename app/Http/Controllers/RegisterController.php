@@ -9,7 +9,7 @@ use Laravel\Sanctum\Sanctum;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validator as FacadesValidator;
+use Illuminate\Support\Facades\Validator;
 
 
 class RegisterController extends Controller
@@ -37,21 +37,23 @@ class RegisterController extends Controller
     {
 
         try {
-            $validator = FacadesValidator::make($request->all(), $this->rules());
+            // We validate data
+            $validator = Validator::make($request->all(), $this->rules());
 
+            // If data isn't right we show a json with the errors
             if ($validator->fails()) {
                 return response()->json(['errors'=>$validator->errors()],422);
             }
 
 
-            //Create user, generate token and return
+            //Create user, save in DB and return
             $register = $this->register->create([
                 'password' => Hash::make($request->password),
             ] + $request->all() );
 
             //dd($request);
 
-            if ($request->image)
+            if ($request->file('image') && $request->image)
             {
                 $register->image = $request->file('image')->store('usersProfileImages','public');
                 $register->save();

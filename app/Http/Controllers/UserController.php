@@ -7,7 +7,9 @@ use App\User;
 use App\Http\Requests\UserRequest;
 use App\Http\Resources\UserResourceCollection;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
@@ -16,6 +18,20 @@ class UserController extends Controller
     {
         $this->user = $user;
     }
+
+    public function rules()
+    {
+        return [
+            'name' => 'string',
+            'last_name' => 'string',
+            'email' => 'email|unique:users',
+            'birth_date' => '',
+            'country' => '',
+            'password' => '',
+            'image' => 'image|nullable',
+        ];
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -27,26 +43,8 @@ class UserController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * The method store it's in RegisterController
      */
-    /*public function store(UserRequest $request)
-    {
-       //$data = $request->getContent();
-        //dd(json_decode($data));
-        $user = $this->user->create( $request->all() );
-
-        if ($request->image)
-        {
-            $user->image = $request->file('image')->store('usersProfileImages','public');
-            $user->save();
-        }
-
-
-        return new UserResource($user);
-    }*/
 
     /**
      * Display the specified resource.
@@ -67,14 +65,26 @@ class UserController extends Controller
      * @param  \App\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function update(UserRequest $request, User $user)
+    public function update(Request $request, User $user)
     {
-        $user->update($request->all());
 
-        if ($request->image)
+        //dd($request);
+
+        $validator = Validator::make($request->all(), $this->rules());
+
+        if($validator->fails()){
+            return response()->json(['errors'=>$validator->errors()],422);
+        }
+
+        $user->update([
+            'password' => Hash::make($request->password),
+        ]+ $request->all());
+
+        if ($request->file('image') && $request->image)
         {
+            // Delete the file from the folder where it's stored
             Storage::disk('public')->delete($user->image);
-            $user->image = $request->file('image')->store('imagenes','public');
+            $user->image = $request->file('image')->store('usersProfileImages','public');
             $user->save();
         }
 

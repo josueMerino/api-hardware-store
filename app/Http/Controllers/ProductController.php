@@ -58,7 +58,7 @@ class ProductController extends Controller
                 return response()->json([
                     'message' => 'The given data is invalid',
                     'errors'=>$validator->errors()
-                ],400);
+                ],422);
             }
             $product = $this->product->create($request->all());
             if ($request->file('image') && $request->image)

@@ -34,7 +34,7 @@ class UserControllerTest extends TestCase
         dd($response);
     }
 
-    public function testUpdateOneUser()
+    public function testUpdateUser()
     {
         $this->withoutExceptionHandling();
         $user = factory(User::class)->create();
@@ -47,12 +47,15 @@ class UserControllerTest extends TestCase
             'email'=>'tester@test.com',
             'birth_date'=>$this->faker->date(),
             'password'=>password_hash('1234', PASSWORD_BCRYPT),
-            'remember_token' => Str::random(10),
+            'country' =>$this->faker->country,
             'image'=>$file,
 
         ]);
 
-        $response->assertStatus(200)
+        dump($user, $response);
+
+        $response
+        ->assertStatus(200)
         ->assertJsonStructure([
             'id',
             'name',
