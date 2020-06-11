@@ -21,18 +21,23 @@ class RegisterController extends Controller
         $this->register = $user;
     }
 
+    public function rules()
+    {
+        return [
+            'name' => 'required',
+            'last_name' => 'required|string',
+            'email' => 'required|email|unique:users',
+            'birth_date' => 'required',
+            'country' => 'required',
+            'password' => 'required',
+        ];
+    }
+
     public function register(Request $request)
     {
 
         try {
-            $validator = FacadesValidator::make($request->all(), [
-                'name' => 'required',
-                'last_name' => 'required|string',
-                'email' => 'required|email',
-                'birth_date' => 'required',
-                'country' => 'required',
-                'password' => 'required',
-            ]);
+            $validator = FacadesValidator::make($request->all(), $this->rules());
 
             if ($validator->fails()) {
                 return response()->json(['errors'=>$validator->errors()],422);
@@ -40,7 +45,9 @@ class RegisterController extends Controller
 
 
             //Create user, generate token and return
-            $register = $this->register->create( $request->all() );
+            $register = $this->register->create([
+                'password' => Hash::make($request->password),
+            ] + $request->all() );
 
             //dd($request);
 
