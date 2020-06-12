@@ -93,6 +93,8 @@ class ProductController extends Controller
     public function update(Request $request, Product $product)
     {
 
+        dd($request);
+
         $validator = Validator::make($request->all(), [
             'title' => 'max:120',
             'image' => 'image|nullable',

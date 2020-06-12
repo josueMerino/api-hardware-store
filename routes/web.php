@@ -13,3 +13,4 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::get('img/{folder}/{file}', 'ImageController@show');
