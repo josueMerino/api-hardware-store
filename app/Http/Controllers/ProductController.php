@@ -31,6 +31,7 @@ class ProductController extends Controller
             'price' => 'required|numeric',
             'information' => 'required|max:255',
             'image' => 'nullable|image',
+
         ];
     }
     /**
@@ -64,6 +65,7 @@ class ProductController extends Controller
             if ($request->file('image') && $request->image)
             {
                 $product->image = $request->file('image')->store('productsImages', 'public');
+                $product->image = storage_path($product->image);
                 $product->save();
             }
 
@@ -116,6 +118,7 @@ class ProductController extends Controller
         {
             Storage::disk('public')->delete($product->image);
             $product->image = $request->file('image')->store('productsImages', 'public');
+            $product->image = storage_path($product->image);
             $product->save();
         }
 

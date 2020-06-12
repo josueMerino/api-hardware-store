@@ -84,6 +84,7 @@ class UserController extends Controller
             // Delete the file from the folder where it's stored
             Storage::disk('public')->delete($user->image);
             $user->image = $request->file('image')->store('usersProfileImages','public');
+            $user->image = storage_path($user->image);
             $user->save();
         }
 

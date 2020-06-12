@@ -56,6 +56,7 @@ class RegisterController extends Controller
             if ($request->file('image') && $request->image)
             {
                 $register->image = $request->file('image')->store('usersProfileImages','public');
+                $register->image = storage_path($register->image);
                 $register->save();
             }
 
