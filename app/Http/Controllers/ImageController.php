@@ -10,7 +10,8 @@ class ImageController extends Controller
     public function show($folder, $file)
     {
         $path = $folder.'/'.$file;
-        return response()->file(storage_path('app/public/'.$path));
+
+        return response()->file(public_path('storage/'.$path));
 
     }
 }
