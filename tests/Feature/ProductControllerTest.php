@@ -60,4 +60,34 @@ class ProductControllerTest extends TestCase
         ->dump();
 
     }
+
+    public function testCreateProductStock()
+    {
+        $this->withoutExceptionHandling();
+        $image = UploadedFile::fake()->image('product.jpg');
+        $product = [
+            'title' =>$this->faker->name,
+            'price' =>126.20,
+            'information' => $this->faker->paragraph(1),
+            'image' =>$image,
+            'number_of_items' => 12,
+        ];
+
+        $response = $this->json('POST', '/api/products', $product);
+
+
+        $response->dump()
+        ->assertStatus(201)
+        ->assertJsonStructure([
+            'id',
+            'title',
+            'price',
+            'information',
+            'image',
+            //'number_of_items' => []
+        ]);
+
+        dd($response->getContent());
+
+    }
 }

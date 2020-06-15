@@ -6,6 +6,7 @@ use App\Http\Resources\UserResource;
 use App\User;
 use App\Http\Requests\UserRequest;
 use App\Http\Resources\UserResourceCollection;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
@@ -67,8 +68,8 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user)
     {
-
-        //dump($request);
+        try {
+           //dump($request);
         $validator = Validator::make($request->all(), $this->rules());
 
         if($validator->fails()){
@@ -89,6 +90,11 @@ class UserController extends Controller
         }
 
         return new UserResource($user);
+        } catch (Exception $error) {
+
+        }
+
+
     }
 
     /**

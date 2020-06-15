@@ -21,9 +21,9 @@ class Product extends Model
         return $this->belongsToMany(Wishlist::class)->withTimestamps();
     }
 
-    public function stockProducts()
+    public function stockProduct()
     {
-        return $this->hasOne(StockProduct::class);
+        return $this->hasOne(StockProduct::class,'product_id');
     }
 
     public function purchases()

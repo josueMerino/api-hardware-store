@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\ProductoResourceCollection;
 use App\Http\Resources\ProductResource;
+use App\Http\Resources\StockProductResource;
 use App\Http\Resources\UserResource;
 use App\Product;
+use App\StockProduct;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -14,11 +16,12 @@ use Illuminate\Support\Facades\Validator;
 class ProductController extends Controller
 {
     protected $product;
+    protected $stockProduct;
 
-    public function __construct(Product $product)
+    public function __construct(Product $product, StockProduct $stockProduct)
     {
         $this->product = $product;
-
+        $this->stockProduct = $stockProduct;
     }
 
     /**
@@ -31,7 +34,7 @@ class ProductController extends Controller
             'price' => 'required|numeric',
             'information' => 'required|max:255',
             'image' => 'nullable|image',
-
+            'number_of_items' => 'required|numeric|min:1',
         ];
     }
     /**
@@ -61,7 +64,17 @@ class ProductController extends Controller
                     'errors'=>$validator->errors()
                 ],422);
             }
-            $product = $this->product->create($request->all());
+
+            $data = [
+                'id' => $request->id,
+                'title' => $request->title,
+                'price' => $request->price,
+                'information' => $request->information,
+                'image' => $request->image,
+                'number_of_items' => $request->number_of_items,
+            ];
+
+            $product = $this->product->create($data);
             if ($request->file('image') && $request->image)
             {
                 $product->image = $request->file('image')->store('productsImages', 'public');
@@ -69,7 +82,20 @@ class ProductController extends Controller
                 $product->save();
             }
 
-            return (new ProductResource($product));
+            $dataStockProduct = [
+                'product_id' => $product->id,
+                'number_of_items' => $data['number_of_items'],
+            ];
+
+            $this->stockProduct->create($dataStockProduct);
+
+
+            $product->find($product->id)->stockProduct;
+
+            return new ProductResource($product);
+
+            //return
+
 
 
     }
