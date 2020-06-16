@@ -5,6 +5,7 @@ namespace App\Http\Resources;
 use App\Product;
 use App\StockProduct;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\DB;
 
 class ProductResource extends JsonResource
 {
@@ -16,14 +17,15 @@ class ProductResource extends JsonResource
      */
     public function toArray($request)
     {
-
-        return [
+        $response = [
             'id'=>$this->id,
             'title'=>$this->title,
             'price'=>$this->price,
             'information'=>$this->information,
             'image'=>$this->image,
-            'number_of_items' => new StockProductResource($this->stockProduct),
+            'items' => $this->whenLoaded('stockProduct')->number_of_items,
         ];
+
+        return $response;
     }
 }

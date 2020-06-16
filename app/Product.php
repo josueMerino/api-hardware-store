@@ -23,7 +23,7 @@ class Product extends Model
 
     public function stockProduct()
     {
-        return $this->hasOne(StockProduct::class,'product_id');
+        return $this->hasOne(StockProduct::class);
     }
 
     public function purchases()

@@ -9,6 +9,7 @@ use App\Http\Resources\UserResource;
 use App\Product;
 use App\StockProduct;
 use Exception;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -44,7 +45,8 @@ class ProductController extends Controller
      */
     public function index()
     {
-        return new ProductoResourceCollection($this->product->get());
+        $product = Product::all();
+        return new ProductoResourceCollection($product);
     }
 
     /**
@@ -74,7 +76,7 @@ class ProductController extends Controller
                 'number_of_items' => $request->number_of_items,
             ];
 
-            $product = $this->product->create($data);
+            $product = Product::create($data);
             if ($request->file('image') && $request->image)
             {
                 $product->image = $request->file('image')->store('productsImages', 'public');
@@ -89,9 +91,12 @@ class ProductController extends Controller
 
             $this->stockProduct->create($dataStockProduct);
 
+            // We call the relationship
+            $product->stockProduct;
 
-            $product->find($product->id)->stockProduct;
+            //$product->stockProduct->select('number_of_items')->where('product_id', $product->id)->get();
 
+            //dd($product);
             return new ProductResource($product);
 
             //return
@@ -108,6 +113,15 @@ class ProductController extends Controller
      */
     public function show(Product $product)
     {
+        if (!$product)
+        {
+            return response()->json([
+                'message'=>'Not Found'
+            ], 404);
+        }
+
+        $product->stockProduct;
+
         return new ProductResource($product);
     }
 
@@ -158,11 +172,20 @@ class ProductController extends Controller
      * @param  \App\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Product $product)
+    public function destroy(Product $product, StockProduct $stockProduct)
     {
-        $product->delete();
+        try {
+            $product->delete();
 
-        return response()->json([
-            'message' => 'Eliminado con éxito'], 200);
+            $stockProduct->delete();
+
+            return response()->json([
+                'message' => 'Eliminado con éxito'], 200);
+        }
+        catch (Exception $error)
+        {
+
+        }
+
     }
 }

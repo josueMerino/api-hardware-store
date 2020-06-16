@@ -16,7 +16,6 @@ class StockProductResource extends JsonResource
     {
         return [
             'number_of_items' => $this->number_of_items,
-            'product' => ProductResource::collection($this->whenLoaded('product'))
         ];
     }
 }
