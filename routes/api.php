@@ -28,10 +28,10 @@ Route::apiResource('cards', 'CardController');
 
 Route::apiResource('addresses', 'AddressController');
 
-Route::post('logout', 'AuthController@logout');
-
-/*Route::middleware(['auth:sanctum'])->group(function () {
 
 
+Route::middleware(['auth:sanctum'])->group(function () {
 
-});*/
+    Route::get('logout', 'AuthController@logout');
+
+});

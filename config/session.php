@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Str;
 
+$sessionCookie = getenv('SESSION_DOMAIN');
+
 return [
 
     /*
@@ -153,7 +155,7 @@ return [
     |
     */
 
-    'domain' => env('SESSION_DOMAIN', null),
+    'domain' => env('SESSION_DOMAIN', $sessionCookie),
 
     /*
     |--------------------------------------------------------------------------
@@ -196,6 +198,6 @@ return [
 
     'same_site' => 'lax',
 
-    'domain' => '.herokuapp.com',
+
 
 ];

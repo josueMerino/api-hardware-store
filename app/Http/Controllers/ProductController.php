@@ -113,16 +113,18 @@ class ProductController extends Controller
      */
     public function show(Product $product)
     {
-        if (!$product)
+        try {
+            $product->stockProduct;
+
+            return new ProductResource($product);
+        } catch (Exception $error)
         {
             return response()->json([
-                'message'=>'Not Found'
+                'message' => 'Not Found',
+                'error' => $error,
             ], 404);
         }
 
-        $product->stockProduct;
-
-        return new ProductResource($product);
     }
 
     /**
@@ -132,16 +134,17 @@ class ProductController extends Controller
      * @param  \App\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Product $product)
+    public function update(Request $request, Product $product, StockProduct $stockProduct)
     {
 
-        dd($request);
+        //dd($request);
 
         $validator = Validator::make($request->all(), [
             'title' => 'max:120',
             'image' => 'image|nullable',
             'price' => 'numeric',
             'information' => 'max:255',
+            'number_of_items' => 'numeric|min:1',
         ]);
 
         if ($validator->fails())
@@ -152,7 +155,15 @@ class ProductController extends Controller
             ],422);
         }
 
-        $product->update($request->all());
+        $data = [
+            'id' => $request->id,
+            'title' => $request->title,
+            'price' => $request->price,
+            'information' => $request->information,
+            'image' => $request->image,
+            'number_of_items' => $request->number_of_items,
+        ];
+        $product->update($data);
 
         if ($request->file('image') && $request->image)
         {
@@ -162,6 +173,14 @@ class ProductController extends Controller
             $product->save();
         }
 
+        $dataStockProduct = [
+            'product_id' => $product->id,
+            'number_of_items' => $data['number_of_items'],
+        ];
+
+        $stockProduct->update($dataStockProduct);
+
+        $product->stockProduct;
 
         return new ProductResource($product);
     }
@@ -184,7 +203,10 @@ class ProductController extends Controller
         }
         catch (Exception $error)
         {
-
+            return response()->json([
+                'message' => 'Error',
+                'error' => $error,
+        ], 500);
         }
 
     }

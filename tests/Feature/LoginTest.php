@@ -6,6 +6,7 @@ use App\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Laravel\Sanctum\Sanctum;
+use Illuminate\Support\Str;
 use Tests\TestCase;
 
 class LoginTest extends TestCase
@@ -31,11 +32,20 @@ class LoginTest extends TestCase
             'password' => '1234',
         ]);
 
+        dd($response->getContent());
 
         $response->assertOk()
-        ->assertJsonStructure(['access_token']);
+        ->assertJsonStructure(['access_token'])
+        ->dump();
+
+
     }
 
+    /**
+     * Test Fail Login 401
+     * When you send email and pass that are incorrect,
+     * when that happens http status is 401
+     */
     public function testFailLogin401()
     {
 
@@ -48,6 +58,10 @@ class LoginTest extends TestCase
         ->assertJsonStructure(['message']);
     }
 
+    /**
+     * When you send a completely invalid email and password
+     * or simply you send nothing, the response is an http status 400
+     */
     public function testFailLogin400()
     {
 
@@ -65,14 +79,15 @@ class LoginTest extends TestCase
         //We login the user
         $this->withoutExceptionHandling();
 
-        $user = factory(User::class)->create()->toArray();
+        $token = Str::random(10);
 
         $auth = factory(User::class)->create();
 
-        //Sanctum::actingAs($auth, ['*']);
+        Sanctum::actingAs($auth, ['*']);
 
-        $response = $this->actingAs($auth)->json('POST', 'api/logout', $user);
+        $response = $this->json('GET', 'api/logout');
 
+        //dd($response->getContent());
         $response->assertStatus(200);
     }
 

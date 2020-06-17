@@ -44,8 +44,14 @@ return [
         'api' => [
             'driver' => 'token',
             'provider' => 'users',
-            'hash' => false,
+            //'hash' => false,
         ],
+
+        /*'sanctum' => [
+            'driver' => 'session',
+            'provider' => 'users',
+
+        ]*/
     ],
 
     /*
@@ -71,10 +77,10 @@ return [
             'model' => App\User::class,
         ],
 
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
+        /*'users' => [
+            'driver' => 'database',
+            'table' => 'users',
+        ],*/
     ],
 
     /*
