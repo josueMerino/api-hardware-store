@@ -10,6 +10,7 @@ use App\Product;
 use App\StockProduct;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
+use JD\Cloudder\Facades\Cloudder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -79,8 +80,26 @@ class ProductController extends Controller
             $product = Product::create($data);
             if ($request->file('image') && $request->image)
             {
-                $product->image = $request->file('image')->store('productsImages', 'public');
-                $product->image = storage_path($product->image);
+                $image = $request->file('image');
+
+                $name = $request->file('image')->getClientOriginalName();
+
+                $imageName = $request->file('image')->getRealPath();
+
+                Cloudder::upload($imageName, null);
+
+                list($width, $height) = getimagesize($imageName);
+
+                $imageURL = Cloudder::show(Cloudder::getPublicId(), [
+                    "width" => $width,
+                    "height" => $height,
+                ]);
+
+                $image->move(public_path("uploads"), $name);
+
+
+                $product->image = $imageURL;
+
                 $product->save();
             }
 
