@@ -38,6 +38,7 @@ class RegisterTest extends TestCase
 
         $response = $this->json('POST','api/register', $user);
 
+        dd($response->getContent());
         $response->assertStatus(201)
         ->assertJsonStructure([
             'id',
@@ -51,7 +52,7 @@ class RegisterTest extends TestCase
             'created_at',
         ]);
 
-        dd($response->getContent());
+
 
     }
 

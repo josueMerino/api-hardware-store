@@ -6,8 +6,10 @@ use App\Http\Requests\UserRequest;
 use App\Http\Resources\UserResource;
 use App\User;
 use Laravel\Sanctum\Sanctum;
+use JD\Cloudder\Facades\Cloudder;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
@@ -19,6 +21,7 @@ class RegisterController extends Controller
     public function __construct(User $user)
     {
         $this->register = $user;
+
     }
 
     public function rules()
@@ -28,6 +31,7 @@ class RegisterController extends Controller
             'last_name' => 'required|string',
             'email' => 'required|email|unique:users',
             'birth_date' => 'required',
+            'image' => 'nullable|image|mimes:jpeg,bmp,jpg,png',
             'country' => 'required',
             'password' => 'required',
         ];
@@ -53,10 +57,30 @@ class RegisterController extends Controller
 
             //dd($request);
 
+            // If the request has an image we will save it
             if ($request->file('image') && $request->image)
             {
-                $register->image = $request->file('image')->store('usersProfileImages','public');
-                $register->image = storage_path($register->image);
+                //Now we assign variables
+                $image = $request->file('image');
+
+                $name = $request->file('image')->getClientOriginalName();
+
+                $imageName = $request->file('image')->getRealPath();
+
+                Cloudder::upload($imageName, null);
+
+                list($width, $height) = getimagesize($imageName);
+
+                $imageURL = Cloudder::show(Cloudder::getPublicId(), [
+                    "width" => $width,
+                    "height" => $height,
+                ]);
+
+                $image->move(public_path("uploads"), $name);
+
+
+                $register->image = $imageURL;
+
                 $register->save();
             }
 
@@ -72,4 +96,13 @@ class RegisterController extends Controller
 
 
     }
+
+    /*public function saveImages(Request $request, $image_url)
+    {
+        $image = new UploadedFile();
+        $image->image_name = $request->file('image_name')->getClientOriginalName();
+        $image->image_url = $image_url;
+
+        $image->save();
+    }*/
 }
