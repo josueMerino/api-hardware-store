@@ -53,7 +53,7 @@ class UserControllerTest extends TestCase
         ]);
 
         //dump($user, $response);
-
+        dd($response->getContent());
         $response
         ->assertStatus(200)
         ->assertJsonStructure([

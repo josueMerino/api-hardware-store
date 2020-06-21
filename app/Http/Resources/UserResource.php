@@ -22,6 +22,7 @@ class UserResource extends JsonResource
             'birth_date'=>$this->birth_date,
             'country' =>$this->country,
             'image'=>$this->image,
+            'image_path'=>$this->image_path,
             'is_admin'=>$this->is_admin,
             'created_at'=>$this->created_at,
         ];

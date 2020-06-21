@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use JD\Cloudder\Facades\Cloudder;
 
 class UserController extends Controller
 {
@@ -26,10 +27,7 @@ class UserController extends Controller
             'name' => 'string',
             'last_name' => 'string',
             'email' => 'email|unique:users',
-            'birth_date' => '',
-            'country' => '',
-            'password' => '',
-            'image' => 'image|nullable',
+            'image' => 'nullable|image|mimes:jpeg,bmp,jpg,png',
         ];
     }
 
@@ -84,14 +82,19 @@ class UserController extends Controller
         {
             // Delete the file from the folder where it's stored
             Storage::disk('public')->delete($user->image);
+
             $user->image = $request->file('image')->store('usersProfileImages','public');
             $user->image = storage_path($user->image);
             $user->save();
         }
 
         return new UserResource($user);
-        } catch (Exception $error) {
-
+        } catch (Exception $error)
+        {
+            return response()->json([
+                'message' => 'There was an error',
+                'error' => $error,
+            ]);
         }
 
 

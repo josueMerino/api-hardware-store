@@ -29,7 +29,7 @@ class AuthController extends Controller
             if ( !Hash::check($request->password, $user->password, [])) {
             throw new \Exception('Error in Login');
             }
-            $tokenResult = $user->createToken('token', ['server:update'])->plainTextToken;
+            $tokenResult = $user->createToken('token')->plainTextToken;
 
             return response()->json([
             'access_token' => $tokenResult,

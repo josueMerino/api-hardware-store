@@ -95,7 +95,7 @@ class ProductController extends Controller
                     "height" => $height,
                 ]);
 
-                $image->move(public_path("uploads"), $name);
+                $image->move(storage_path("app/public/uploads/productImages"), $name);
 
 
                 $product->image = $imageURL;
