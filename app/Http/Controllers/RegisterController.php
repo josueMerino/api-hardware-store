@@ -63,12 +63,16 @@ class RegisterController extends Controller
                 //Now we assign variables
 
                 //Name is to make a unique id to the image
-                $name = Hash::make($request->file('image')->getClientOriginalName());
+                $name =Hash::make($request->file('image')->getClientOriginalName(),[
+                    'salt' => 12,
+                ]);
                 $imageName = $request->file('image')->getRealPath();
-                $publicId ="hardware-store/profileImages/$name";
+                $publicId ="hardware-store/profileImages/user/";
 
 
-                Cloudder::upload($imageName, $publicId);
+                Cloudder::upload($imageName, null,[
+                    'path' => $publicId,
+                ]);
 
                 list($width, $height) = getimagesize($imageName);
 
@@ -78,7 +82,7 @@ class RegisterController extends Controller
                 ]);
 
                 $register->image = $imageURL;
-                $register->image_path = $publicId;
+                $register->image_path = Cloudder::getPublicId();
                 $register->save();
             }
 

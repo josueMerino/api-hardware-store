@@ -26,8 +26,8 @@ class UserController extends Controller
         return [
             'name' => 'string',
             'last_name' => 'string',
-            'email' => 'email|unique:users',
-            'image' => 'nullable|image|mimes:jpeg,bmp,jpg,png',
+            'email' => 'email',
+            'image' => 'nullable|image|mimes:jpeg,bmp,jpg,png|string',
         ];
     }
 
@@ -80,11 +80,28 @@ class UserController extends Controller
 
         if ($request->file('image') && $request->image)
         {
-            // Delete the file from the folder where it's stored
-            Storage::disk('public')->delete($user->image);
+            // Delete the image in Cloudinary
+            //dd($user->image_path);
+            Cloudder::delete($user->image_path);
 
-            $user->image = $request->file('image')->store('usersProfileImages','public');
-            $user->image = storage_path($user->image);
+            $name =Hash::make($request->file('image')->getClientOriginalName(),[
+                'salt' => 12,
+            ]);
+            $imageName = $request->file('image')->getRealPath();
+            $publicId ="hardware-store/profileImages/user/";
+
+
+            Cloudder::upload($imageName, null);
+
+            list($width, $height) = getimagesize($imageName);
+
+            $imageURL = Cloudder::secureShow(Cloudder::getPublicId(), [
+                "width" => $width,
+                "height" => $height,
+            ]);
+
+            $user->image = $imageURL;
+            $user->image_path = Cloudder::getPublicId();
             $user->save();
         }
 
@@ -110,6 +127,7 @@ class UserController extends Controller
     {
         $user->delete();
 
+        Cloudder::delete($user->image_path);
         return response()->json([
             'message' =>'Eliminado con éxito'
             ], 200);
