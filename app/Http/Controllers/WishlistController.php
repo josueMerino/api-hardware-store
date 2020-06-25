@@ -35,7 +35,7 @@ class WishlistController extends Controller
     {
         $auth = auth()->user();
 
-        $wishlist = $this->wishlist->create( [
+        $wishlist = $this->wishlist->create([
                 'id'=>$request->id,
                 'user_id' => $auth->id,
                 'number_of_items'=>$request->number_of_items,
