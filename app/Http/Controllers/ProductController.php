@@ -214,8 +214,11 @@ class ProductController extends Controller
     public function destroy(Product $product, StockProduct $stockProduct)
     {
         try {
-
-            Cloudder::delete($product->image_path);
+            
+            if ($product->image_path) 
+            {
+                Cloudder::delete($product->image_path);
+            }
 
             $product->delete();
 

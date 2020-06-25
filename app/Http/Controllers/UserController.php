@@ -129,10 +129,25 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
-        Cloudder::delete($user->image_path);
-        $user->delete();
-        return response()->json([
-            'message' =>'Eliminado con éxito'
-            ], 200);
+        try {
+            
+            if ($user->image_path) 
+            {
+            Cloudder::delete($user->image_path);
+            }
+        
+            $user->delete();
+        
+            return response()->json([
+                'message' =>'Eliminado con éxito'
+                ], 200);
+        } 
+        catch (Exception $error) {
+            return response()->json([
+                'message' => 'Error',
+                'error' => $error,
+            ], 500);
+        }
+        
     }
 }
