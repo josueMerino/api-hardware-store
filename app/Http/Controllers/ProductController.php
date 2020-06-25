@@ -159,7 +159,7 @@ class ProductController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function update(Request $request, Product $product, StockProduct $stockProduct)
+    public function update(Request $request, Product $product, StockProduct $stockProduct, Category $category)
     {
 
         //dd($request);
@@ -182,8 +182,16 @@ class ProductController extends Controller
             ],422);
         }
 
+        $category->update([
+            'category' => $request->category,
+        ]);
 
-        $product->update($request->all());
+        $product->where('category_id', $category->id)->update([
+            'title' => $request->title,
+            'price' => $request->price,
+            'information' => $request->information,
+            'image' => $request->image,
+        ]);
 
         if ($request->file('image') && $request->image)
         {
@@ -209,7 +217,7 @@ class ProductController extends Controller
         $stockProduct->where('product_id', $product->id)->update(['number_of_items' => $request->number_of_items]);
 
         $product->stockProduct;
-
+        $product->category;
         return new ProductResource($product);
     }
 
@@ -219,7 +227,7 @@ class ProductController extends Controller
      * @param  \App\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Product $product, StockProduct $stockProduct)
+    public function destroy(Product $product, StockProduct $stockProduct, Category $category)
     {
         try {
 
@@ -231,6 +239,8 @@ class ProductController extends Controller
             $product->delete();
 
             $stockProduct->delete();
+
+            $category->delete();
 
             return response()->json([
                 'message' => 'Eliminado con éxito'], 200);

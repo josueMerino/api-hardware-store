@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Category;
 use App\Product;
 use App\StockProduct;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -121,10 +122,46 @@ class ProductControllerTest extends TestCase
             'price',
             'information',
             'image',
-            'items'
+            'items',
+            'category',
         ]);
 
         dd($response->getContent());
+
+    }
+
+    public function testUpdatePSC()
+    {
+        $this->withoutExceptionHandling();
+        $image = UploadedFile::fake()->image('product.jpg');
+        $product = factory(Product::class)->create();
+        $stockProduct = factory(StockProduct::class)->create();
+        $category = factory(Category::class)->create();
+
+
+        $response = $this->json('POST', 'api/products', [
+            'title' => $product->title,
+            'price' => $product->price,
+            'information' => $product->information,
+            'image' => $product->image,
+            'number_of_items' => $stockProduct->number_of_items,
+            'category' => $category->category,
+        ]);
+
+        $productUpdate = [
+            'title' => 'Pepito',
+            'number_of_items' => 16,
+            'category' => 'mouses',
+        ];
+
+
+        $response = $this->json('PUT', "/api/products/$product->id", $productUpdate);
+
+        $response->assertOk()
+        ->dump();
+
+        dd($response->getContent());
+
 
     }
 }
