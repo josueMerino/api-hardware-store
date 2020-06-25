@@ -35,7 +35,7 @@ class ProductController extends Controller
             'title' => 'required|max:120',
             'price' => 'required|numeric',
             'information' => 'required|max:255',
-            'image' => 'nullable|image',
+            'image' => 'nullable|image|mimes:jpeg,bmp,jpg,png',
             'number_of_items' => 'required|numeric|min:1',
         ];
     }
@@ -78,11 +78,9 @@ class ProductController extends Controller
             ];
 
             $product = Product::create($data);
+
             if ($request->file('image') && $request->image)
             {
-                $image = $request->file('image');
-
-                $name = $request->file('image')->getClientOriginalName();
 
                 $imageName = $request->file('image')->getRealPath();
 
@@ -90,15 +88,14 @@ class ProductController extends Controller
 
                 list($width, $height) = getimagesize($imageName);
 
-                $imageURL = Cloudder::show(Cloudder::getPublicId(), [
+                $imageURL = Cloudder::secureShow(Cloudder::getPublicId(), [
                     "width" => $width,
                     "height" => $height,
                 ]);
 
-                $image->move(storage_path("app/public/uploads/productImages"), $name);
-
-
                 $product->image = $imageURL;
+
+                $product->image_path = Cloudder::getPublicId();
 
                 $product->save();
             }
@@ -153,17 +150,20 @@ class ProductController extends Controller
      * @param  \App\Product  $product
      * @return \Illuminate\Http\Response
      */
+
     public function update(Request $request, Product $product, StockProduct $stockProduct)
     {
 
         //dd($request);
 
         $validator = Validator::make($request->all(), [
+
             'title' => 'max:120',
-            'image' => 'image|nullable',
+            'image' => 'image|nullable|mimes:jpeg,bmp,jpg,png',
             'price' => 'numeric',
             'information' => 'max:255',
             'number_of_items' => 'numeric|min:1',
+
         ]);
 
         if ($validator->fails())
@@ -174,30 +174,31 @@ class ProductController extends Controller
             ],422);
         }
 
-        $data = [
-            'id' => $request->id,
-            'title' => $request->title,
-            'price' => $request->price,
-            'information' => $request->information,
-            'image' => $request->image,
-            'number_of_items' => $request->number_of_items,
-        ];
-        $product->update($data);
+        
+        $product->update($request->all());
 
         if ($request->file('image') && $request->image)
         {
-            Storage::disk('public')->delete($product->image);
-            $product->image = $request->file('image')->store('productsImages', 'public');
-            $product->image = storage_path($product->image);
+            
+            Cloudder::delete($product->image_path);
+
+            $imageName = $request->file('image')->getRealPath();
+            
+            Cloudder::upload($imageName, null);
+
+            list($width, $height) = getimagesize($imageName);
+
+            $imageURL = Cloudder::secureShow(Cloudder::getPublicId(), [
+                "width" => $width,
+                "height" => $height,
+            ]);
+
+            $product->image = $imageURL;
+            $product->image_path = Cloudder::getPublicId();
             $product->save();
         }
 
-        $dataStockProduct = [
-            'product_id' => $product->id,
-            'number_of_items' => $data['number_of_items'],
-        ];
-
-        $stockProduct->update($dataStockProduct);
+        $stockProduct->where('product_id', $product->id)->update(['number_of_items' => $request->number_of_items]);
 
         $product->stockProduct;
 
@@ -213,6 +214,9 @@ class ProductController extends Controller
     public function destroy(Product $product, StockProduct $stockProduct)
     {
         try {
+
+            Cloudder::delete($product->image_path);
+
             $product->delete();
 
             $stockProduct->delete();

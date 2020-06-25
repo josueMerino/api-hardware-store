@@ -7,6 +7,12 @@ use Illuminate\Http\Request;
 
 class StockProductController extends Controller
 {
+    protected $stockProduct;
+
+    public function __construct(StockProduct $stockProduct)
+    {
+        
+    }
     /**
      * Display a listing of the resource.
      *

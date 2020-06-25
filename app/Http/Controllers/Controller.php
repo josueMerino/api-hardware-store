@@ -14,22 +14,4 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
-    public function image(Request $request)
-    {
-        $name = Hash::make($request->file('image'));
-        $imageName = $request->file('image')->getRealPath();
-        $publicId ="hardware-store/profileImages/user$name";
-
-
-        Cloudder::upload($imageName, $publicId);
-
-        list($width, $height) = getimagesize($imageName);
-
-        $imageURL = Cloudder::secureShow($publicId, [
-            "width" => $width,
-            "height" => $height,
-        ]);
-
-        return $imageURL;
-    }
 }

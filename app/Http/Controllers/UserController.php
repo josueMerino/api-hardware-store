@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use JD\Cloudder\Facades\Cloudder;
+use Symfony\Component\Console\Input\Input;
+use Symfony\Component\HttpFoundation\InputBag;
 
 class UserController extends Controller
 {
@@ -27,7 +29,7 @@ class UserController extends Controller
             'name' => 'string',
             'last_name' => 'string',
             'email' => 'email',
-            'image' => 'nullable|image|mimes:jpeg,bmp,jpg,png|string',
+            'image' => 'nullable|image|mimes:jpeg,bmp,jpg,png',
         ];
     }
 
@@ -74,23 +76,25 @@ class UserController extends Controller
             return response()->json(['errors'=>$validator->errors()],422);
         }
 
-        $user->update([
-            'password' => Hash::make($request->password),
-        ]+ $request->all());
+        $user->update($request->all());
+        //dd($request->password);
+        if ($request->password != null) {
+            $user->update([
+                'password' => Hash::make($request->password),
+            ]);
+        }
 
+
+        
+        
         if ($request->file('image') && $request->image)
         {
             // Delete the image in Cloudinary
             //dd($user->image_path);
             Cloudder::delete($user->image_path);
 
-            $name =Hash::make($request->file('image')->getClientOriginalName(),[
-                'salt' => 12,
-            ]);
             $imageName = $request->file('image')->getRealPath();
-            $publicId ="hardware-store/profileImages/user/";
-
-
+            
             Cloudder::upload($imageName, null);
 
             list($width, $height) = getimagesize($imageName);
@@ -125,9 +129,8 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
-        $user->delete();
-
         Cloudder::delete($user->image_path);
+        $user->delete();
         return response()->json([
             'message' =>'Eliminado con éxito'
             ], 200);
