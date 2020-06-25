@@ -80,20 +80,51 @@ class ProductControllerTest extends TestCase
             'image' => $product->image,
             'number_of_items' => $stockProduct->number_of_items
         ]);
-    
+
         $productUpdate = [
             'title' => 'Pepito',
             'number_of_items' => 16,
         ];
 
-        
+
         $response = $this->json('PUT', "/api/products/$product->id", $productUpdate);
-        
+
         $response->assertOk()
         ->dump();
 
         dd($response->getContent());
 
-        
+
+    }
+
+    public function testCreatePSC()
+    {
+        $this->withoutExceptionHandling();
+        $image = UploadedFile::fake()->image('product.jpg');
+        $product = [
+            'title' =>$this->faker->name,
+            'price' =>126.20,
+            'information' => $this->faker->paragraph(1),
+            'image' =>$image,
+            'number_of_items' => 12,
+            'category' => 'laptop',
+        ];
+
+        $response = $this->json('POST', '/api/products', $product);
+
+
+        $response->dump()
+        ->assertStatus(201)
+        ->assertJsonStructure([
+            'id',
+            'title',
+            'price',
+            'information',
+            'image',
+            'items'
+        ]);
+
+        dd($response->getContent());
+
     }
 }

@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Product extends Model
 {
     protected $fillable =
-    ['title', 'price', 'information', 'image',];
+    ['title', 'price', 'information', 'image', 'image_path', 'category_id'];
 
 
     // Relantionships, attributes and mutators
@@ -33,6 +33,6 @@ class Product extends Model
 
     public function category()
     {
-        return $this->belongsTo(Category::class)->withTimestamps();
+        return $this->belongsTo(Category::class);
     }
 }

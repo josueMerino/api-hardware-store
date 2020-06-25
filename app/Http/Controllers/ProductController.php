@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Category;
 use App\Http\Resources\ProductoResourceCollection;
 use App\Http\Resources\ProductResource;
 use App\Http\Resources\StockProductResource;
@@ -37,6 +38,7 @@ class ProductController extends Controller
             'information' => 'required|max:255',
             'image' => 'nullable|image|mimes:jpeg,bmp,jpg,png',
             'number_of_items' => 'required|numeric|min:1',
+            'category' => 'required',
         ];
     }
     /**
@@ -75,9 +77,15 @@ class ProductController extends Controller
                 'information' => $request->information,
                 'image' => $request->image,
                 'number_of_items' => $request->number_of_items,
+                'category' => $request->category,
             ];
 
-            $product = Product::create($data);
+
+            $category = Category::create($data);
+
+            $product = Product::create([
+                'category_id' => $category->id,
+            ] + $data);
 
             if ($request->file('image') && $request->image)
             {
@@ -109,10 +117,10 @@ class ProductController extends Controller
 
             // We call the relationship
             $product->stockProduct;
-
+            //dd($product->category());
             //$product->stockProduct->select('number_of_items')->where('product_id', $product->id)->get();
+            $product->category;
 
-            //dd($product);
             return new ProductResource($product);
 
             //return
@@ -174,16 +182,16 @@ class ProductController extends Controller
             ],422);
         }
 
-        
+
         $product->update($request->all());
 
         if ($request->file('image') && $request->image)
         {
-            
+
             Cloudder::delete($product->image_path);
 
             $imageName = $request->file('image')->getRealPath();
-            
+
             Cloudder::upload($imageName, null);
 
             list($width, $height) = getimagesize($imageName);
@@ -214,8 +222,8 @@ class ProductController extends Controller
     public function destroy(Product $product, StockProduct $stockProduct)
     {
         try {
-            
-            if ($product->image_path) 
+
+            if ($product->image_path)
             {
                 Cloudder::delete($product->image_path);
             }
