@@ -15,7 +15,8 @@ class AddPayMethodIdToPurchasesTable extends Migration
     {
         Schema::table('purchases', function (Blueprint $table) {
 
-            $table->foreignId('pay_method_id')->nullable()->after('user_id')->constrained();
+            $table->foreignId('pay_method_id')->nullable()->after('user_id')->constrained()
+            ->onUpdate('cascade')->onDelete('cascade');
         });
     }
 

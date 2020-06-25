@@ -16,8 +16,8 @@ class CreateProductPurchaseTable extends Migration
         Schema::create('product_purchase', function (Blueprint $table) {
             $table->id();
 
-            $table->foreignId('product_id')->constrained();
-            $table->foreignId('purchase_id')->constrained();
+            $table->foreignId('product_id')->constrained()->onUpdate('cascade')->onDelete('cascade');
+            $table->foreignId('purchase_id')->constrained()->onUpdate('cascade')->onDelete('cascade');
 
             $table->timestamps();
         });
