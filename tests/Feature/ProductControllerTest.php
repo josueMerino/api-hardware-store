@@ -130,7 +130,7 @@ class ProductControllerTest extends TestCase
 
     }
 
-    public function testUpdatePSC()
+    public function testUpdatePS()
     {
         $this->withoutExceptionHandling();
         $image = UploadedFile::fake()->image('product.jpg');
@@ -138,7 +138,7 @@ class ProductControllerTest extends TestCase
         $stockProduct = factory(StockProduct::class)->create();
         $category = factory(Category::class)->create();
 
-
+        //dd($category->category);
         $response = $this->json('POST', 'api/products', [
             'title' => $product->title,
             'price' => $product->price,
@@ -151,7 +151,7 @@ class ProductControllerTest extends TestCase
         $productUpdate = [
             'title' => 'Pepito',
             'number_of_items' => 16,
-            'category' => 'mouses',
+            //'category' => 'mouses',
         ];
 
 
