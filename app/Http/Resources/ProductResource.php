@@ -23,7 +23,7 @@ class ProductResource extends JsonResource
             'price'=>$this->price,
             'information'=>$this->information,
             'image'=>$this->image,
-            'image_path' => $this->image_path,
+            //'image_path' => $this->image_path,
             'items' => $this->whenLoaded('stockProduct')->number_of_items,
             'category' => $this->whenLoaded('category')->category,
         ];

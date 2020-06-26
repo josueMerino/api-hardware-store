@@ -164,4 +164,9 @@ class ProductControllerTest extends TestCase
 
 
     }
+
+    public function testIndex()
+    {
+        
+    }
 }

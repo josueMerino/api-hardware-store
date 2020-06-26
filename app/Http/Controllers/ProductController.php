@@ -48,7 +48,8 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $product = Product::all();
+        $product = Product::with('stockProduct', 'category')->get();
+        
         return new ProductoResourceCollection($product);
     }
 

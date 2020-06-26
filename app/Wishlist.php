@@ -20,7 +20,9 @@ class Wishlist extends Model
 
     public function products()
     {
-        return $this->belongsToMany(Product::class)->withTimestamps();
+        return $this->belongsToMany(Product::class)
+                ->withPivot('name')
+                ->withTimestamps();
     }
 
     protected $attributes = [
