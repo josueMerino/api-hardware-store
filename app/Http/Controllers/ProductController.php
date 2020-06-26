@@ -49,8 +49,8 @@ class ProductController extends Controller
     public function index()
     {
         $product = Product::with('stockProduct', 'category')->get();
-        
-        return new ProductoResourceCollection($product);
+        //dd($product);
+        return ProductResource::collection($product);
     }
 
     /**
@@ -140,14 +140,14 @@ class ProductController extends Controller
     {
         try {
             $product->stockProduct;
-
+            $product->category;
             return new ProductResource($product);
         } catch (Exception $error)
         {
             return response()->json([
                 'message' => 'Not Found',
                 'error' => $error,
-            ], 404);
+            ], 500);
         }
 
     }

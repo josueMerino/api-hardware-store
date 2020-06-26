@@ -14,7 +14,16 @@ class ProductoResourceCollection extends ResourceCollection
      */
     public function toArray($request)
     {
-        
-        return parent::toArray($request);
+
+        return [
+            'data' => $this->collection([
+                'id' => $this->id,
+                'title' => $this->title,
+                'price' => $this->price,
+                'image' => $this->image,
+                'items' => $this->whenLoaded('stockProduct')->number_of_items,
+                'category' => $this->whenLoaded('category')->category,
+            ]),
+        ];
     }
 }
