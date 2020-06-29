@@ -3,9 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\WishlistResource;
+use App\Product;
 use App\User;
 use App\Wishlist;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 class WishlistController extends Controller
 {
@@ -15,6 +19,14 @@ class WishlistController extends Controller
     {
         $this->wishlist = $wishlist;
     }
+
+    public function rules()
+    {
+        return [
+            'name' => 'required|max:100',
+            'product_id' => 'required',
+        ];
+    }
     /**
      * Display a listing of the resource.
      *
@@ -22,7 +34,7 @@ class WishlistController extends Controller
      */
     public function index()
     {
-        //
+
     }
 
     /**
@@ -33,15 +45,42 @@ class WishlistController extends Controller
      */
     public function store(Request $request)
     {
-        $auth = auth()->user();
+        try
+        {
+            //dd($request->all());
+            $auth = auth()->user();
 
-        $wishlist = $this->wishlist->create([
-                'id'=>$request->id,
-                'user_id' => $auth->id,
-                'number_of_items'=>$request->number_of_items,
-            ]);
+            $validator = Validator::make($request->all(), $this->rules());
 
-        return response()->json(new WishlistResource($wishlist), 201);
+            if ($validator->fails())
+            {
+                return response()->json([
+                    'message' => $validator->errors(),
+                ], 400);
+            }
+
+            $wishlist = $this->wishlist->create([
+                    'user_id' => $auth->id,
+                    'name' =>$request->name,
+                ]);
+
+
+            //dd($wishlist->id);
+            $wishlistPivot = Wishlist::find($wishlist->id);
+
+            $wishlistPivot->products()->attach($request->product_id);
+
+            $wishlist->products;
+            return new WishlistResource($wishlist);
+        }
+        catch (Exception $error)
+        {
+            return response()->json([
+                'message' => $error,
+                'status_code' => 500,
+            ], 500);
+        }
+
 
 
     }

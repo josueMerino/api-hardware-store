@@ -16,8 +16,8 @@ class WishlistResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'number_of_items' => $this->number_of_items,
-            'product_name' => ProductResource::collection($this->products),
+            'name' => $this->name,
+            'product' => ProductResource::collection($this->whenLoaded('products')),
         ];
     }
 }

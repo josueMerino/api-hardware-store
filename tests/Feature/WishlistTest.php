@@ -2,7 +2,9 @@
 
 namespace Tests\Feature;
 
+use App\Category;
 use App\Product;
+use App\StockProduct;
 use App\User;
 use App\Wishlist;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -25,14 +27,41 @@ class WishlistTest extends TestCase
         $this->withoutExceptionHandling();
 
         $user = factory(User::class)->create();
+        $category = factory(Category::class)->create();
+        $product = factory(Product::class)->create();
+        $stockProduct = factory(StockProduct::class)->create();
 
+        //dd($category->category);
+        $response = $this->json('POST', 'api/products', [
+            'title' => $product->title,
+            'price' => $product->price,
+            'information' => $product->information,
+            'image' => $product->image,
+            'number_of_items' => $stockProduct->number_of_items,
+            'category' => $category->category,
+        ]);
         $wishlist = [
-            'number_of_items' => 12,
+            'name' => 'Bruh',
+            'product_id' => $product->id,
         ];
 
-        $response = $this->actingAs($user)->json('POST', 'api/wishlists', $wishlist);
+        Sanctum::actingAs($user, ['*']);
 
-        $response->assertStatus(201);
+        $response = $this->json('POST', 'api/wishlists', $wishlist);
+
+        dd($response->getContent());
+        $response->assertStatus(201)
+        ->dump();
+
+        //
+    }
+
+    public function testUA()
+    {
+
+        $response = $this->json('GET', 'api/wishlists');
+
+        $response->assertStatus(401);
 
         dd($response->getContent());
     }

@@ -22,7 +22,7 @@ Route::apiResource('users', 'UserController')->except('store');
 
 Route::apiResource('products', 'ProductController');
 
-Route::apiResource('wishlists', 'WishlistController');
+
 
 Route::apiResource('cards', 'CardController');
 
@@ -33,5 +33,5 @@ Route::apiResource('addresses', 'AddressController');
 Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::get('logout', 'AuthController@logout');
-
+    Route::apiResource('wishlists', 'WishlistController');
 });

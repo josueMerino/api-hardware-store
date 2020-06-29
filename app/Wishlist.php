@@ -9,7 +9,7 @@ class Wishlist extends Model
 
     // Mass Asignments
     protected $fillable = [
-        'user_id', 'number_of_items'
+        'user_id', 'name', 'product_id'
     ];
 
     // Relantionships, attributes and mutators
@@ -20,12 +20,9 @@ class Wishlist extends Model
 
     public function products()
     {
-        return $this->belongsToMany(Product::class)
-                ->withPivot('name')
+        return $this->belongsToMany(Product::class, 'product_wishlist', 'product_id', 'wishlist_id')
                 ->withTimestamps();
     }
 
-    protected $attributes = [
-        'number_of_items' => 1,
-    ];
+
 }
