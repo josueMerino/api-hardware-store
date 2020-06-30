@@ -15,4 +15,8 @@ class StockProduct extends Model
     {
         return $this->belongsTo(Product::class);
     }
+
+    protected $attributes = [
+        'number_of_items' => 1,
+    ];
 }
