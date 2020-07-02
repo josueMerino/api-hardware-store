@@ -27,19 +27,12 @@ class WishlistTest extends TestCase
         $this->withoutExceptionHandling();
 
         $user = factory(User::class)->create();
-        $category = factory(Category::class)->create();
+
         $product = factory(Product::class)->create();
-        $stockProduct = factory(StockProduct::class)->create();
+
 
         //dd($category->category);
-        $response = $this->json('POST', 'api/products', [
-            'title' => $product->title,
-            'price' => $product->price,
-            'information' => $product->information,
-            'image' => $product->image,
-            'number_of_items' => $stockProduct->number_of_items,
-            'category' => $category->category,
-        ]);
+
         $wishlist = [
             'name' => 'Bruh',
             'product_id' => $product->id,

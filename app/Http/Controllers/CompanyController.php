@@ -2,17 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\StockProduct;
+use App\Company;
 use Illuminate\Http\Request;
 
-class StockProductController extends Controller
+class CompanyController extends Controller
 {
-    protected $stockProduct;
-
-    public function __construct(StockProduct $stockProduct)
-    {
-        
-    }
     /**
      * Display a listing of the resource.
      *
@@ -37,22 +31,23 @@ class StockProductController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\StockProduct  $stockProduct
+     * @param  \App\Company  $company
      * @return \Illuminate\Http\Response
      */
-    public function show(StockProduct $stockProduct)
+    public function show(Company $company)
     {
         //
     }
+
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\StockProduct  $stockProduct
+     * @param  \App\Company  $company
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, StockProduct $stockProduct)
+    public function update(Request $request, Company $company)
     {
         //
     }
@@ -60,10 +55,10 @@ class StockProductController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\StockProduct  $stockProduct
+     * @param  \App\Company  $company
      * @return \Illuminate\Http\Response
      */
-    public function destroy(StockProduct $stockProduct)
+    public function destroy(Company $company)
     {
         //
     }

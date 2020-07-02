@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Product extends Model
 {
     protected $fillable =
-    ['title', 'price', 'information', 'image', 'image_path', 'category_id'];
+    ['title', 'price', 'information', 'image', 'image_path', 'category_id', 'number_of_items', 'company_id'];
 
 
     // Relantionships, attributes and mutators
@@ -21,11 +21,6 @@ class Product extends Model
         return $this->belongsToMany(Wishlist::class)->withTimestamps();
     }
 
-    public function stockProduct()
-    {
-        return $this->hasOne(StockProduct::class);
-    }
-
     public function purchases()
     {
         return $this->belongsToMany(Purchase::class)->withTimestamps();
@@ -34,5 +29,10 @@ class Product extends Model
     public function category()
     {
         return $this->belongsTo(Category::class);
+    }
+
+    public function companies()
+    {
+        return $this->belongsToMany(Company::class, 'stock_products')->withTimestamps()->withPivot('number_of_items') ;
     }
 }

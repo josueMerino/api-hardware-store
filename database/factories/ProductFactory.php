@@ -9,6 +9,7 @@ use Illuminate\Http\UploadedFile;
 $factory->define(Product::class, function (Faker $faker) {
     $image = UploadedFile::fake()->image('profile.jpg');
     return [
+        'id' => 2,
         'category_id' => 1,
         'title' => 'Jr',
         'price' => 125,

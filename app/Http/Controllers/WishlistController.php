@@ -70,6 +70,7 @@ class WishlistController extends Controller
 
             $wishlistPivot->products()->attach($request->product_id);
 
+            // Hacer un query que seleccione los datos que queremos
             $wishlist->products;
             return new WishlistResource($wishlist);
         }

@@ -3,28 +3,21 @@
 namespace App\Http\Controllers;
 
 use App\Category;
-use App\Http\Resources\ProductoResourceCollection;
 use App\Http\Resources\ProductResource;
-use App\Http\Resources\StockProductResource;
 use App\Http\Resources\UserResource;
 use App\Product;
-use App\StockProduct;
 use Exception;
-use Illuminate\Database\Eloquent\Builder;
 use JD\Cloudder\Facades\Cloudder;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class ProductController extends Controller
 {
     protected $product;
-    protected $stockProduct;
 
-    public function __construct(Product $product, StockProduct $stockProduct)
+    public function __construct(Product $product)
     {
         $this->product = $product;
-        $this->stockProduct = $stockProduct;
     }
 
     /**
@@ -38,7 +31,8 @@ class ProductController extends Controller
             'information' => 'required|max:255',
             'image' => 'nullable|image|mimes:jpeg,bmp,jpg,png',
             'number_of_items' => 'required|numeric|min:1',
-            'category' => 'required',
+            'category_id' => 'required|numeric|min:1',
+            'company_id' => 'required|numeric|min:1',
         ];
     }
     /**
@@ -48,7 +42,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $product = Product::with('stockProduct', 'category')->get();
+        $product = Product::with('category')->get();
         //dd($product);
         return ProductResource::collection($product);
     }
@@ -71,22 +65,16 @@ class ProductController extends Controller
                 ],422);
             }
 
-            $data = [
+            $dataProduct = [
                 'id' => $request->id,
                 'title' => $request->title,
                 'price' => $request->price,
                 'information' => $request->information,
                 'image' => $request->image,
-                'number_of_items' => $request->number_of_items,
-                'category' => $request->category,
             ];
 
 
-            $category = Category::create($data);
-
-            $product = Product::create([
-                'category_id' => $category->id,
-            ] + $data);
+            $product = Product::create($dataProduct);
 
             if ($request->file('image') && $request->image)
             {
@@ -106,29 +94,23 @@ class ProductController extends Controller
 
                 $product->image_path = Cloudder::getPublicId();
 
-                $product->save();
             }
 
-            $dataStockProduct = [
-                'product_id' => $product->id,
-                'number_of_items' => $data['number_of_items'],
-            ];
+            $categoryRelation = $this->product->find($request->category_id);
 
-            $this->stockProduct->create($dataStockProduct);
+            $productRelation = $this->product->find($product->id);
 
-            // We call the relationship
-            $product->stockProduct;
-            //dd($product->category());
-            //$product->stockProduct->select('number_of_items')->where('product_id', $product->id)->get();
-            $product->category;
+            $product->category()->associate($categoryRelation);
+
+            $productRelation->companies()->attach($request->company_id,[
+                'number_of_items' => $request->number_of_items
+            ]);
+
+            $product->save();
 
             return new ProductResource($product);
 
-            //return
-
-
-
-    }
+        }
 
     /**
      * Display the specified resource.
@@ -160,7 +142,7 @@ class ProductController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function update(Request $request, Product $product, StockProduct $stockProduct, Category $category)
+    public function update(Request $request, Product $product)
     {
 
         //dd($request->getContent());
@@ -183,7 +165,7 @@ class ProductController extends Controller
             ],422);
         }
 
-        
+
 
         $product->update($request->all());
 
@@ -208,7 +190,7 @@ class ProductController extends Controller
             $product->save();
         }
 
-        $stockProduct->where('product_id', $product->id)->update(['number_of_items' => $request->number_of_items]);
+
 
         $product->stockProduct;
         $product->category;
@@ -221,7 +203,7 @@ class ProductController extends Controller
      * @param  \App\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Product $product, StockProduct $stockProduct, Category $category)
+    public function destroy(Product $product, Category $category)
     {
         try {
 
@@ -231,8 +213,6 @@ class ProductController extends Controller
             }
 
             $product->delete();
-
-            $stockProduct->delete();
 
             $category->delete();
 

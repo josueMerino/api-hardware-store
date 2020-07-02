@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Category;
+use App\Company;
 use App\Product;
 use App\StockProduct;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -19,31 +20,30 @@ class ProductControllerTest extends TestCase
      *
      * @return void
      */
-    public function testCreateProductStock()
+    public function testCreateProduct()
     {
         $this->withoutExceptionHandling();
         $image = UploadedFile::fake()->image('product.jpg');
+
+        //We create the data required to product
+        $category = factory(Category::class)->create();
+        $company = factory(Company::class)->create();
+
         $product = [
-            'title' =>$this->faker->name,
-            'price' =>126.20,
-            'information' => $this->faker->paragraph(1),
-            'image' =>$image,
+            'id' => 1,
+            'title' => $this->faker->title(),
+            'price' => $this->faker->randomFloat(2),
+            'information' => $this->faker->sentence(12),
+            'image' => $image,
             'number_of_items' => 12,
+            'category_id' => $category->id,
+            'company_id' => $company->id,
         ];
 
-        $response = $this->json('POST', '/api/products', $product);
+        $response = $this->json('POST', 'api/products', $product);
 
-
-        $response->dump()
-        ->assertStatus(201)
-        ->assertJsonStructure([
-            'id',
-            'title',
-            'price',
-            'information',
-            'image',
-            'items'
-        ]);
+        $response->assertStatus(201)
+        ->dump();
 
         dd($response->getContent());
 

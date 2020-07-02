@@ -22,7 +22,9 @@ Route::apiResource('users', 'UserController')->except('store');
 
 Route::apiResource('products', 'ProductController');
 
+Route::apiResource('categories', 'CategoryController')->except('store', 'update');
 
+Route::apiResource('companies', 'CompanyController')->except('store', 'update');
 
 Route::apiResource('cards', 'CardController');
 
