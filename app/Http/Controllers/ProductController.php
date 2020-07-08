@@ -32,7 +32,7 @@ class ProductController extends Controller
             'image' => 'nullable|image|mimes:jpeg,bmp,jpg,png',
             'number_of_items' => 'required|numeric|min:1',
             'category_id' => 'required|numeric|min:1',
-            'company_id' => 'required|numeric|min:1',
+            //'company_id' => 'required|numeric|min:1',
         ];
     }
     /**
