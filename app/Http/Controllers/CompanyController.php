@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Company;
+use App\Http\Resources\CompanyResource;
 use Illuminate\Http\Request;
 
 class CompanyController extends Controller
@@ -14,18 +15,9 @@ class CompanyController extends Controller
      */
     public function index()
     {
-        //
-    }
+        $company = Company::get();
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
+        return CompanyResource::collection($company);
     }
 
     /**
@@ -39,18 +31,6 @@ class CompanyController extends Controller
         //
     }
 
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Company  $company
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Company $company)
-    {
-        //
-    }
 
     /**
      * Remove the specified resource from storage.

@@ -43,7 +43,7 @@ class ProductController extends Controller
     public function index()
     {
         $product = Product::with('category')->get();
-        //dd($product);
+
         return ProductResource::collection($product);
     }
 
@@ -94,20 +94,18 @@ class ProductController extends Controller
 
                 $product->image_path = Cloudder::getPublicId();
 
+
             }
 
-            $categoryRelation = $this->product->find($request->category_id);
+            $product->category()->associate($request->category_id);
 
-            $productRelation = $this->product->find($product->id);
-
-            $product->category()->associate($categoryRelation);
-
-            $productRelation->companies()->attach($request->company_id,[
+            $product->companies()->attach($request->company_id,[
                 'number_of_items' => $request->number_of_items
             ]);
 
             $product->save();
 
+            $product->category;
             return new ProductResource($product);
 
         }

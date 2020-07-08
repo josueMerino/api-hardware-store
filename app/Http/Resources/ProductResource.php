@@ -25,7 +25,7 @@ class ProductResource extends JsonResource
             'image'=>$this->image,
             //'image_path' => $this->image_path,
             //'items' => $this->whenLoaded('stockProduct')->number_of_items,
-            //'category' => $this->whenLoaded('category')->category,
+            'category' => new CategoryResource($this->whenLoaded('category')),
         ];
 
         return $response;
