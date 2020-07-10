@@ -30,7 +30,8 @@ class ProductController extends Controller
             'price' => 'required|numeric',
             'information' => 'required|max:255',
             'image' => 'nullable|image|mimes:jpeg,bmp,jpg,png',
-            'number_of_items' => 'required|numeric|min:1',
+            'companies' => 'required|string',
+            //'number_of_items' => 'required|numeric|min:1',
             'category_id' => 'required|numeric|min:1',
             //'company_id' => 'required|numeric|min:1',
         ];
@@ -42,7 +43,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $product = Product::with('category')->get();
+        $product = Product::with(['category', 'companies'])->get();
 
         return ProductResource::collection($product);
     }
@@ -99,13 +100,19 @@ class ProductController extends Controller
 
             $product->category()->associate($request->category_id);
 
-            $product->companies()->attach($request->company_id,[
-                'number_of_items' => $request->number_of_items
-            ]);
+
+            foreach (json_decode($request->companies) as $company) {
+                //dd($company);
+                $product->companies()->attach($company->company_id,[
+                    'number_of_items' => $company->number_of_items,
+                ]);
+            }
+
 
             $product->save();
 
             $product->category;
+            $product->companies;
             return new ProductResource($product);
 
         }

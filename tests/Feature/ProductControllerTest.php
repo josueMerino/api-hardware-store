@@ -35,9 +35,14 @@ class ProductControllerTest extends TestCase
             'price' => $this->faker->randomFloat(2),
             'information' => $this->faker->sentence(12),
             'image' => $image,
-            'number_of_items' => 12,
+            //'number_of_items' => 12,
             'category_id' => $category->id,
-            'company_id' => $company->id,
+            'companies' => json_encode([
+                ['company_id' => $company->id,
+                'number_of_items' => random_int(2,90)
+                ],
+            ]),
+            //'company_id' => $company->companies,
         ];
 
         $response = $this->json('POST', 'api/products', $product);

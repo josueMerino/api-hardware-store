@@ -16,6 +16,9 @@ class CompanyResource extends JsonResource
     {
         return [
             'company' => $this->name,
+            'items' => $this->whenPivotLoaded('stock_products', function(){
+                return $this->pivot->number_of_items;
+            })
         ];
     }
 }

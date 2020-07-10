@@ -23,7 +23,7 @@ class WishlistController extends Controller
     public function rules()
     {
         return [
-            'name' => 'required|max:100',
+            'name' => 'required|max:100|unique:wishlists',
             'product_id' => 'required',
         ];
     }
@@ -66,9 +66,7 @@ class WishlistController extends Controller
 
 
             //dd($wishlist->id);
-            $wishlistPivot = Wishlist::find($wishlist->id);
-
-            $wishlistPivot->products()->attach($request->product_id);
+            $wishlist->products()->attach($request->product_id);
 
             // Hacer un query que seleccione los datos que queremos
             $wishlist->products;
