@@ -9,6 +9,13 @@ class Product extends Model
     protected $fillable =
     ['title', 'price', 'information', 'image', 'image_path', 'category_id', 'number_of_items', 'company_id'];
 
+    protected $attributes = 
+    [
+        'image' => 'https://res.cloudinary.com/raptorjm091201/image/upload/v1594638006/avatar_rv5uyr.jpg',
+        'image_path' => 'v1594638006'
+    ];
+
+
 
     // Relantionships, attributes and mutators
     public function cartUserProducts()

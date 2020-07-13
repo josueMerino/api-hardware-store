@@ -29,11 +29,9 @@ class ProductController extends Controller
             'title' => 'required|max:120',
             'price' => 'required|numeric',
             'information' => 'required|max:255',
-            'image' => 'nullable|image|mimes:jpeg,bmp,jpg,png',
+            'image' => 'url|image|mimes:jpeg,bmp,jpg,png',
             'companies' => 'required|string',
-            //'number_of_items' => 'required|numeric|min:1',
             'category_id' => 'required|numeric|min:1',
-            //'company_id' => 'required|numeric|min:1',
         ];
     }
     /**
@@ -56,6 +54,7 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
+            
             $validator = Validator::make($request->all(), $this->rules());
 
             if ($validator->fails())
@@ -71,12 +70,12 @@ class ProductController extends Controller
                 'title' => $request->title,
                 'price' => $request->price,
                 'information' => $request->information,
-                'image' => $request->image,
             ];
 
 
             $product = Product::create($dataProduct);
 
+            dd($product);
             if ($request->file('image') && $request->image)
             {
 

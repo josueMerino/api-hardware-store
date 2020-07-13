@@ -24,8 +24,7 @@ class ProductResource extends JsonResource
             'information'=>$this->information,
             'image'=>$this->image,
             //'image_path' => $this->image_path,
-            'items' => $this->whenPivotLoaded('stock_products', $this->pivot),
-            'company' => CompanyResource::collection($this->whenLoaded('companies')),
+            'companies' => CompanyResource::collection($this->whenLoaded('companies')),
             'category' => new CategoryResource($this->whenLoaded('category')),
         ];
 

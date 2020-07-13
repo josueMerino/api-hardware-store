@@ -149,7 +149,7 @@ class ProductControllerTest extends TestCase
             'title' => $product->title,
             'price' => $product->price,
             'information' => $product->information,
-            'image' => $product->image,
+            //'image' => $product->image,
             'number_of_items' => $stockProduct->number_of_items,
             'category' => $category->category,
         ]);
